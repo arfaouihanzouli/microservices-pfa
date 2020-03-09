@@ -1,3 +1,6 @@
+**/HELP.md
+eureka-server
+zuul-server
 target/
 !.mvn/wrapper/maven-wrapper.jar
 

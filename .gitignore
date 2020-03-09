@@ -1,3 +1,6 @@
+**/HELP.md
+eureka-server
+cloud-config-server
 target/
 !.mvn/wrapper/maven-wrapper.jar
 

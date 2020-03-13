@@ -23,7 +23,7 @@ public class JwtUserDetailsService implements UserDetailsService {
     private UsersProxy usersProxy;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserBean user = usersProxy.findByUsername(username);
+        UserBean user = usersProxy.findByUsernameOrEmail(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }

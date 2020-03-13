@@ -54,7 +54,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable()
                 // dont authenticate this particular request
                 .authorizeRequests().antMatchers("/authenticate",
-                "/microservice-users/users/findByUsername/**","/microservice-users/users/signup/**").permitAll().
+                "/microservice-users/users/findByUsername/**",
+                "/microservice-users/users/findByUsernameOrEmail/**",
+                "/microservice-users/users/signup").permitAll().
                 antMatchers("/microservice-users/**").hasAuthority("ADMIN")
                 .antMatchers("/microservice-cv/**").hasAuthority("USER")
                 .antMatchers("/microservice-offers/**").hasAuthority("MANAGER").

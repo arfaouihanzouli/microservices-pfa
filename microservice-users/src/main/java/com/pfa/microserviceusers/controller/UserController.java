@@ -22,7 +22,8 @@ public class UserController {
     public User signUp(@Valid @RequestBody RegistrationForm data)
     {
         String username=data.getUsername();
-        User user=userService.findByUsername(username);
+        String email=data.getEmail();
+        User user=userService.findByUsernameOrEmail(username,email);
         if(user!=null)
         {
             throw new RuntimeException("This user already exists, Try with another user");
@@ -36,6 +37,7 @@ public class UserController {
         User u=new User();
         u.setPassword(password);
         u.setUsername(username);
+        u.setEmail(email);
         userService.saveUser(u);
         userService.addRoleToUser(username,"USER");
         return u;

@@ -1,15 +1,24 @@
 package com.pfa.microserviceusers.controller;
 
+import com.pfa.microserviceusers.models.Candidat;
 import com.pfa.microserviceusers.models.User;
+import com.pfa.microserviceusers.models.embedded.Address;
+import com.pfa.microserviceusers.models.embedded.Photo;
 import com.pfa.microserviceusers.models.enumuration.RoleName;
+import com.pfa.microserviceusers.repository.UserRepository;
 import com.pfa.microserviceusers.requests.*;
 import com.pfa.microserviceusers.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.Optional;
 
 @RestController
@@ -19,8 +28,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/signup")
-    public User signUp(@Valid @RequestBody RegistrationForm data)
+
+    @PostMapping(value = "/signup")
+    public User signUp(@Valid @RequestBody RegistrationForm data) throws IOException
     {
         String username=data.getUsername();
         String email=data.getEmail();
@@ -39,9 +49,46 @@ public class UserController {
         u.setPassword(password);
         u.setUsername(username);
         u.setEmail(email);
+        u.setName(data.getName());
+        u.setLastName(data.getLastName());
+        u.setTelephone(data.getTelephone());
+        u.setRole(RoleName.USER);
+        if(data.getAddress()!=null || data.getNiveau()!=null)
+        {
+            Candidat candidat=new Candidat();
+            Address address=new Address(data.getAddress(),data.getCity(),data.getCountry(),data.getPostcode());
+            candidat.setAddress(address);
+            candidat.setDate_naissance(data.getDate_naissance());
+            candidat.setDiplome(data.getDiplome());
+            candidat.setInstitut(data.getInstitut());
+            candidat.setNiveau(data.getNiveau());
+            candidat.setPassword(password);
+            candidat.setUsername(username);
+            candidat.setEmail(email);
+            candidat.setName(data.getName());
+            candidat.setLastName(data.getLastName());
+            candidat.setTelephone(data.getTelephone());
+            candidat.setRole(RoleName.CANDIDAT);
+            return userService.saveUser(candidat);
+        }
+
         userService.saveUser(u);
-        userService.addRoleToUser(username, RoleName.USER);
         return u;
+    }
+
+    @RequestMapping(method = RequestMethod.PUT,value = "/addPhoto/{username}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public User updatePhoto(@RequestParam("file") MultipartFile file,@PathVariable String username) throws IOException
+    {
+        User user=userService.findByUsername(username);
+        //get details of photos and encoding it
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String type=file.getContentType();
+        byte[] fileContent =file.getBytes();
+        String encodedString = Base64.getEncoder().encodeToString(fileContent);
+        Photo photo=new Photo(fileName,type,encodedString);
+
+        userService.addPhotoToUser(user,photo);
+        return user;
     }
     @GetMapping("/findByUsername/{username}")
     public User findByUsername(@Valid @PathVariable String username)

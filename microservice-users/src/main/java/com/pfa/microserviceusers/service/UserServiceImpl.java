@@ -2,6 +2,7 @@ package com.pfa.microserviceusers.service;
 
 
 import com.pfa.microserviceusers.models.*;
+import com.pfa.microserviceusers.models.embedded.Photo;
 import com.pfa.microserviceusers.models.enumuration.RoleName;
 import com.pfa.microserviceusers.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    @Override
+    public User addPhotoToUser(User user, Photo photo) {
+        user.setPhoto(photo);
+        return userRepository.save(user);
+    }
 
 
     @Override

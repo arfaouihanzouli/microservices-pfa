@@ -1,60 +1,65 @@
 package com.pfa.microserviceusers.models;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import com.pfa.microserviceusers.models.audit.AbstractEntity;
+import com.pfa.microserviceusers.models.embedded.Photo;
+import com.pfa.microserviceusers.models.enumuration.RoleName;
+
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
+import javax.validation.constraints.NotNull;
+
 
 @Entity
-public class User {
-    @Id
-    @GeneratedValue
-    private long id;
+@Inheritance(strategy=InheritanceType.JOINED)
+public class User extends AbstractEntity {
+    @Column
     private String username;
+
+    @Column
     private String password;
+
+    @Column
     private String email;
+
+    @Column
     private String name;
+
+    @Column
     private String lastName;
+
+    @Enumerated(EnumType.STRING)
+    private RoleName role;
+
+    @Column
+    private String telephone;
+
+    @Column
+    @Embedded
+    private Photo photo;
+
+    @Column
     private Integer active=1;
+
+    @Column
     private boolean isLoacked=false;
+
+    @Column
     private boolean isExpired=false;
+
+    @Column
     private boolean isEnabled=true;
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<Role> roles=new ArrayList<>();
 
-    public User( String username, String password, Collection<Role> roles, String email) {
-        this.username = username;
-        this.password = password;
-        this.roles = roles;
-        this.email = email;
-    }
 
-    public User(String username, String password, String email, String name, String lastName, Integer active, boolean isLoacked, boolean isExpired, boolean isEnabled, Collection<Role> roles) {
+    public User(String username, String password, String email, RoleName role) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.name = name;
-        this.lastName = lastName;
-        this.active = active;
-        this.isLoacked = isLoacked;
-        this.isExpired = isExpired;
-        this.isEnabled = isEnabled;
-        this.roles = roles;
+        this.role = role;
     }
 
     public User() {
+        this.role=RoleName.USER;
 
     }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -71,12 +76,12 @@ public class User {
         this.password = password;
     }
 
-    public Collection<Role> getRoles() {
-        return roles;
+    public RoleName getRole() {
+        return role;
     }
 
-    public void setRoles(Collection<Role> roles) {
-        this.roles = roles;
+    public void setRole(RoleName role) {
+        this.role = role;
     }
 
     public String getEmail() {
@@ -133,5 +138,21 @@ public class User {
 
     public void setEnabled(boolean enabled) {
         isEnabled = enabled;
+    }
+
+    public Photo getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(Photo photo) {
+        this.photo = photo;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
     }
 }

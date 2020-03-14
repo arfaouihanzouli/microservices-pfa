@@ -5,10 +5,16 @@ import com.pfa.microserviceusers.models.User;
 import com.pfa.microserviceusers.models.embedded.Address;
 import com.pfa.microserviceusers.models.embedded.Photo;
 import com.pfa.microserviceusers.models.enumuration.RoleName;
+import com.pfa.microserviceusers.models.token.ConfirmationToken;
+import com.pfa.microserviceusers.repository.ConfirmationTokenRepository;
 import com.pfa.microserviceusers.requests.*;
+import com.pfa.microserviceusers.service.EmailSenderService;
 import com.pfa.microserviceusers.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +25,6 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.Optional;
-
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -27,8 +32,15 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private EmailSenderService emailSenderService;
 
-    @PostMapping(value = "/signup")
+    @Autowired
+    private ConfirmationTokenRepository confirmationTokenRepository;
+
+    private final Logger log = LoggerFactory.getLogger(User.class);
+
+    @RequestMapping(value = "/signup",method = RequestMethod.POST)
     public User signUp(@Valid @RequestBody RegistrationForm data) throws IOException
     {
         String username=data.getUsername();
@@ -68,11 +80,30 @@ public class UserController {
             candidat.setLastName(data.getLastName());
             candidat.setTelephone(data.getTelephone());
             candidat.setRole(RoleName.CANDIDAT);
-            return userService.saveUser(candidat);
+            userService.saveUser(candidat);
+            emailSenderService.sendEmail(candidat);
+            return candidat;
         }
-
         userService.saveUser(u);
+        emailSenderService.sendEmail(u);
+        //log.info(u.getEmail());
         return u;
+    }
+
+    @RequestMapping(value="/confirm-account", method= {RequestMethod.GET, RequestMethod.POST})
+    public String confirmUserAccount(@RequestParam("token")String confirmationToken)
+    {
+        ConfirmationToken token = confirmationTokenRepository.findByConfirmationToken(confirmationToken);
+        log.info(token.getConfirmationToken());
+        if(token != null)
+        {
+            User user = userService.findByUsernameOrEmail(token.getUser().getEmail(),token.getUser().getEmail());
+            log.info(user.getEmail());
+            user.setEnabled(true);
+            userService.updateUser(user);
+            return "Congratulations! Your account has been activated and email is verified!";
+        }
+        return "The link is invalid or broken!";
     }
 
     @RequestMapping(method = RequestMethod.PUT,value = "/addPhoto/{username}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

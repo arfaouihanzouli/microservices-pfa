@@ -48,7 +48,7 @@ public class User extends AbstractEntity {
     private boolean isExpired=false;
 
     @Column
-    private boolean isEnabled=true;
+    private boolean isEnabled=false;
 
 
     public User(String username, String password, String email, RoleName role) {

@@ -34,6 +34,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User updateUser(User user) {
+        return userRepository.save(user);
+    }
+
+    @Override
     public String encodedStringOfImage(Long id) {
         return userRepository.getEncodStringOfImage(id);
     }

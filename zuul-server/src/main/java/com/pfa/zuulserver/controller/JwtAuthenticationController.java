@@ -1,6 +1,8 @@
 package com.pfa.zuulserver.controller;
 
 import com.pfa.zuulserver.security.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,14 +33,16 @@ public class JwtAuthenticationController {
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody JwtRequest authenticationRequest) throws Exception {
+        Logger log = LoggerFactory.getLogger(Class.class);
 
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-
+        log.info(authenticationRequest.getUsername());
         final UserDetails userDetails = userDetailsService
                 .loadUserByUsername(authenticationRequest.getUsername());
 
         final String token = jwtTokenUtil.generateToken(userDetails);
 
+        log.info(token);
         return ResponseEntity.ok(new JwtResponse(token));
     }
 

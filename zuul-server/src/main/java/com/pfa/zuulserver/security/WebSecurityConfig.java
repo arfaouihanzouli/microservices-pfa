@@ -1,5 +1,6 @@
 package com.pfa.zuulserver.security;
 
+import com.pfa.zuulserver.beans.RoleBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -56,10 +57,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers("/authenticate",
                 "/microservice-users/users/findByUsername/**",
                 "/microservice-users/users/findByUsernameOrEmail/**",
-                "/microservice-users/users/signup").permitAll().
-                antMatchers("/microservice-users/**").hasAuthority("ADMIN")
-                .antMatchers("/microservice-cv/**").hasAuthority("USER")
-                .antMatchers("/microservice-offers/**").hasAuthority("MANAGER").
+                "/microservice-users/users/signup",
+                "/**/users/confirm-account?token=**").permitAll().
+                antMatchers("/microservice-users/**").hasAuthority(String.valueOf(RoleBean.ADMIN))
+                .antMatchers("/microservice-cv/**").hasAuthority(String.valueOf(RoleBean.USER))
+                .antMatchers("/microservice-offers/**").hasAuthority(String.valueOf(RoleBean.MANAGER)).
                 // all other requests need to be authenticated
                         anyRequest().authenticated().and().
                 // make sure we use stateless session; session won't be used to

@@ -64,7 +64,7 @@ public class UserController {
         u.setLastName(data.getLastName());
         u.setTelephone(data.getTelephone());
         u.setRole(RoleName.USER);
-        if(data.getAddress()!=null || data.getNiveau()!=null)
+        if(data.getAddress()!=null && data.getNiveau()!=null && data.getCity()!=null && data.getCountry()!=null)
         {
             Candidat candidat=new Candidat();
             Address address=new Address(data.getAddress(),data.getCity(),data.getCountry(),data.getPostcode());

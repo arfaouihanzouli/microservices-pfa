@@ -1,4 +1,4 @@
-package com.pfa.microserviceusers.models;
+package com.pfa.microserviceusers.models.embedded;
 
 import javax.persistence.*;
 

@@ -33,20 +33,25 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    @Override
+    public String encodedStringOfImage(Long id) {
+        return userRepository.getEncodStringOfImage(id);
+    }
+
 
     @Override
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsernameIgnoreCase(username);
     }
 
     @Override
     public User findByUsernameOrEmail(String username, String email) {
-        return userRepository.findByUsernameOrEmail(username,email);
+        return userRepository.findByUsernameOrEmailIgnoreCase(username,email);
     }
 
     @Override
     public void addRoleToUser(String username, RoleName roleName) {
-        User user=userRepository.findByUsernameOrEmail(username,username);
+        User user=userRepository.findByUsernameOrEmailIgnoreCase(username,username);
         user.setRole(roleName);
         userRepository.save(user);
     }

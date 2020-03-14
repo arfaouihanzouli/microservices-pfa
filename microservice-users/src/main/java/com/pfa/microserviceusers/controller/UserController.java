@@ -5,7 +5,6 @@ import com.pfa.microserviceusers.models.User;
 import com.pfa.microserviceusers.models.embedded.Address;
 import com.pfa.microserviceusers.models.embedded.Photo;
 import com.pfa.microserviceusers.models.enumuration.RoleName;
-import com.pfa.microserviceusers.repository.UserRepository;
 import com.pfa.microserviceusers.requests.*;
 import com.pfa.microserviceusers.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,6 +98,17 @@ public class UserController {
             throw new RuntimeException("This user not exists, Try with another user");
         }
         return user;
+    }
+
+    @GetMapping("/getEncoded/{id}")
+    public String encodedImageOfUser(@PathVariable Long id)
+    {
+        String encodedStringOfImage=userService.encodedStringOfImage(id);
+        if(encodedStringOfImage==null)
+        {
+            throw new RuntimeException("This user not exists, Try with another user");
+        }
+        return encodedStringOfImage;
     }
     @GetMapping("/findByUsernameOrEmail/{usernameOrEmail}")
     public User findByUsernameOrEmail(@Valid @PathVariable String usernameOrEmail)

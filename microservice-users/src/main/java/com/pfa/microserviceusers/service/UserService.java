@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface UserService {
     public User saveUser(User user);
     public User addPhotoToUser(User user, Photo photo);
+    public String encodedStringOfImage(Long id);
     public User findByUsername(String username);
     public User findByUsernameOrEmail(String username,String email);
     public void addRoleToUser(String username, RoleName role);

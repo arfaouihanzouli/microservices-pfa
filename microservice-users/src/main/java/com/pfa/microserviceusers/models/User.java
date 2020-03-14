@@ -1,5 +1,6 @@
 package com.pfa.microserviceusers.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pfa.microserviceusers.models.audit.AbstractEntity;
 import com.pfa.microserviceusers.models.embedded.Photo;
 import com.pfa.microserviceusers.models.enumuration.RoleName;
@@ -14,6 +15,7 @@ public class User extends AbstractEntity {
     @Column
     private String username;
 
+    @JsonIgnore
     @Column
     private String password;
 

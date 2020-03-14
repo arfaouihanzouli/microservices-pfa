@@ -2,7 +2,7 @@ package com.pfa.microserviceusers.service;
 
 
 import com.pfa.microserviceusers.models.*;
-import com.pfa.microserviceusers.repository.RoleRepository;
+import com.pfa.microserviceusers.models.enumuration.RoleName;
 import com.pfa.microserviceusers.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,9 +18,6 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
@@ -29,10 +26,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-    @Override
-    public Role saveRole(Role role) {
-        return roleRepository.save(role);
-    }
+
 
     @Override
     public User findByUsername(String username) {
@@ -45,10 +39,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addRoleToUser(String username, String roleName) {
+    public void addRoleToUser(String username, RoleName roleName) {
         User user=userRepository.findByUsernameOrEmail(username,username);
-        Role role=roleRepository.findByRole(roleName);
-        user.getRoles().add(role);
+        user.setRole(roleName);
+        userRepository.save(user);
     }
 
     @Override

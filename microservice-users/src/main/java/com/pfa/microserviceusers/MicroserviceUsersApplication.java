@@ -1,6 +1,7 @@
 package com.pfa.microserviceusers;
 
 import com.pfa.microserviceusers.models.*;
+import com.pfa.microserviceusers.models.enumuration.RoleName;
 import com.pfa.microserviceusers.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -30,17 +31,15 @@ public class MicroserviceUsersApplication implements CommandLineRunner {
 	}
 	@Override
 	public void run(String... args) throws Exception {
-		userService.saveRole(new Role( "USER"));
-		userService.saveRole(new Role( "ADMIN"));
-		userService.saveRole(new Role( "MANAGER"));
-		userService.saveUser(new User("marwen","1234",null,"marwenhanzouli@gmail.com"));
-		userService.saveUser(new User("admin","1234",null,"adminadmin@gmail.com"));
-		userService.saveUser(new User("nourd","1234",null,"noureddine0arfaoui@gmail.com"));
-		userService.saveUser(new User("yooo","1234",null,"yoyoyoyoyyo@gmail.com"));
 
-		userService.addRoleToUser("marwen","USER");
-		userService.addRoleToUser("admin","ADMIN");
-		userService.addRoleToUser("nourd","MANAGER");
-		userService.addRoleToUser("yooo","MANAGER");
+		userService.saveUser(new User("marwen","1234","marwenhanzouli@gmail.com", RoleName.USER));
+		userService.saveUser(new User("admin","1234","adminadmin@gmail.com",RoleName.ADMIN));
+		userService.saveUser(new User("nourd","1234","noureddine0arfaoui@gmail.com",RoleName.MANAGER));
+		userService.saveUser(new Candidat("yooo","1234","yoyoyoyoyyo@gmail.com",RoleName.CANDIDAT));
+
+		userService.addRoleToUser("marwen",RoleName.USER);
+		userService.addRoleToUser("admin",RoleName.ADMIN);
+		userService.addRoleToUser("nourd",RoleName.MANAGER);
+		userService.addRoleToUser("yooo",RoleName.MANAGER);
 	}
 }

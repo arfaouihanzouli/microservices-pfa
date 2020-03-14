@@ -1,6 +1,7 @@
 package com.pfa.microserviceusers.controller;
 
 import com.pfa.microserviceusers.models.User;
+import com.pfa.microserviceusers.models.enumuration.RoleName;
 import com.pfa.microserviceusers.requests.*;
 import com.pfa.microserviceusers.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class UserController {
         u.setUsername(username);
         u.setEmail(email);
         userService.saveUser(u);
-        userService.addRoleToUser(username,"USER");
+        userService.addRoleToUser(username, RoleName.USER);
         return u;
     }
     @GetMapping("/findByUsername/{username}")

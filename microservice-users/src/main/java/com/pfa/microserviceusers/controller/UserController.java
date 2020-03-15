@@ -1,30 +1,23 @@
 package com.pfa.microserviceusers.controller;
 
-import com.pfa.microserviceusers.models.Candidat;
-import com.pfa.microserviceusers.models.User;
-import com.pfa.microserviceusers.models.embedded.Address;
-import com.pfa.microserviceusers.models.embedded.Photo;
+import com.pfa.microserviceusers.exceptions.ResourceNotFoundException;
+import com.pfa.microserviceusers.models.*;
+import com.pfa.microserviceusers.models.embedded.*;
 import com.pfa.microserviceusers.models.enumuration.RoleName;
-import com.pfa.microserviceusers.models.token.ConfirmationToken;
-import com.pfa.microserviceusers.repository.ConfirmationTokenRepository;
 import com.pfa.microserviceusers.requests.*;
-import com.pfa.microserviceusers.service.EmailSenderService;
-import com.pfa.microserviceusers.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.pfa.microserviceusers.service.*;
+import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
+import org.springframework.data.domain.*;
+import org.springframework.http.*;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Base64;
-import java.util.Optional;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -45,7 +38,7 @@ public class UserController {
         User user=userService.findByUsernameOrEmail(username,email);
         if(user!=null)
         {
-            throw new RuntimeException("This user already exists, Try with another user");
+            throw new ResourceNotFoundException("This user already exists, Try with another user");
         }
         String password=data.getPassword();
         String repassword=data.getRepassword();
@@ -87,19 +80,24 @@ public class UserController {
         return u;
     }
 
-    @RequestMapping(method = RequestMethod.PUT,value = "/addPhoto/{username}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public User updatePhoto(@RequestParam("file") MultipartFile file,@PathVariable String username) throws IOException
+    @RequestMapping(method = RequestMethod.PUT,value = "/addPhoto/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public User updatePhoto(@RequestParam("file") MultipartFile file,@PathVariable Long id) throws IOException
     {
-        User user=userService.findByUsername(username);
-        //get details of photos and encoding it
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        String type=file.getContentType();
-        byte[] fileContent =file.getBytes();
-        String encodedString = Base64.getEncoder().encodeToString(fileContent);
-        Photo photo=new Photo(fileName,type,encodedString);
+        return userService.findById(id).map(u->{
+            //get details of photos and encoding it
+            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+            String type=file.getContentType();
+            byte[] fileContent = new byte[0];
+            try {
+                fileContent = file.getBytes();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String encodedString = Base64.getEncoder().encodeToString(fileContent);
+            Photo photo=new Photo(fileName,type,encodedString);
+            return userService.addPhotoToUser(u,photo);
+        }).orElseThrow(()-> new ResourceNotFoundException("This user does not exist!"));
 
-        userService.addPhotoToUser(user,photo);
-        return user;
     }
     @GetMapping("/findByUsername/{username}")
     public User findByUsername(@Valid @PathVariable String username)
@@ -107,7 +105,7 @@ public class UserController {
         User user=userService.findByUsername(username);
         if(user==null)
         {
-            throw new RuntimeException("This user not exists, Try with another user");
+            throw new ResourceNotFoundException("This user not exists, Try with another user");
         }
         return user;
     }
@@ -118,28 +116,69 @@ public class UserController {
         String encodedStringOfImage=userService.encodedStringOfImage(id);
         if(encodedStringOfImage==null)
         {
-            throw new RuntimeException("This user not exists, Try with another user");
+            throw new ResourceNotFoundException("This user not exists, Try with another user");
         }
         return encodedStringOfImage;
     }
+
     @GetMapping("/findByUsernameOrEmail/{usernameOrEmail}")
     public User findByUsernameOrEmail(@Valid @PathVariable String usernameOrEmail)
     {
         User user=userService.findByUsernameOrEmail(usernameOrEmail,usernameOrEmail);
         if(user==null)
         {
-            throw new RuntimeException("This user not exists, Try with another user");
+            throw new ResourceNotFoundException("This user not exists, Try with another user");
         }
         return user;
     }
     @GetMapping("/findById/{id}")
     public User findById(@Valid @PathVariable Long id)
     {
-        Optional<User> user=userService.findById(id);
-        if(user==null)
+        return userService.findById(id)
+                .orElseThrow(()->new ResourceNotFoundException("This user not exists, Try with another user"));
+    }
+
+    @GetMapping("/findAllUsers")
+    public Page<User> findAllUsers(Pageable pageable)
+    {
+        return userService.findAll(pageable);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id)
+    {
+       return userService.findById(id).map(user->{
+            userService.deleteUser(id);
+            return ResponseEntity.ok().build();
+        }).orElseThrow(()-> new ResourceNotFoundException("This user not exists!"));
+    }
+
+    @PutMapping("/update/{id}")
+    public User updateUser(@RequestBody User user, @PathVariable Long id)
+    {
+        return userService.findById(id).map( u -> {
+            u.setLastName(user.getLastName());
+            u.setName(user.getName());
+            u.setTelephone(user.getTelephone());
+            u.setUsername(user.getUsername());
+            u.setLoacked(user.isLoacked());
+            return userService.updateUser(u);
+        }).orElseThrow(()-> new ResourceNotFoundException("This user not exists!"));
+    }
+    @PutMapping("/update-password/{id}")
+    public ResponseEntity<Object> updatePassword(@RequestBody ResetPasswordRequest resetPasswordRequest, @PathVariable Long id)
+    {
+        if(!resetPasswordRequest.getNewPassword().equals(resetPasswordRequest.getConfirmNewPassword()))
         {
-            throw new RuntimeException("This user not exists, Try with another user");
+            throw new RuntimeException("You must confirm your password");
         }
-        return user.get();
+        userService.findById(id).map( u -> {
+            u.setPassword(resetPasswordRequest.getNewPassword());
+            userService.saveUser(u);
+            return u;
+        }).orElseThrow(()-> new ResourceNotFoundException("This user not exists!"));
+        return new ResponseEntity<>(
+                new ApiResponse("Your password has been successfully changed!",true),
+                HttpStatus.OK);
     }
 }

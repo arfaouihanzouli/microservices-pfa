@@ -23,6 +23,7 @@ public class Candidat extends User {
     private Date date_naissance;
 
     @Column
+    @Embedded
     private Address address;
 
 

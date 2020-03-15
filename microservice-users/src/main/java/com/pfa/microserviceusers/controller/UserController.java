@@ -35,9 +35,6 @@ public class UserController {
     @Autowired
     private EmailSenderService emailSenderService;
 
-    @Autowired
-    private ConfirmationTokenRepository confirmationTokenRepository;
-
     private final Logger log = LoggerFactory.getLogger(User.class);
 
     @RequestMapping(value = "/signup",method = RequestMethod.POST)
@@ -81,29 +78,13 @@ public class UserController {
             candidat.setTelephone(data.getTelephone());
             candidat.setRole(RoleName.CANDIDAT);
             userService.saveUser(candidat);
-            emailSenderService.sendEmail(candidat);
+            emailSenderService.sendConfirmationEmail(candidat);
             return candidat;
         }
         userService.saveUser(u);
-        emailSenderService.sendEmail(u);
+        emailSenderService.sendConfirmationEmail(u);
         //log.info(u.getEmail());
         return u;
-    }
-
-    @RequestMapping(value="/confirm-account", method= {RequestMethod.GET, RequestMethod.POST})
-    public String confirmUserAccount(@RequestParam("token")String confirmationToken)
-    {
-        ConfirmationToken token = confirmationTokenRepository.findByConfirmationToken(confirmationToken);
-        log.info(token.getConfirmationToken());
-        if(token != null)
-        {
-            User user = userService.findByUsernameOrEmail(token.getUser().getEmail(),token.getUser().getEmail());
-            log.info(user.getEmail());
-            user.setEnabled(true);
-            userService.updateUser(user);
-            return "Congratulations! Your account has been activated and email is verified!";
-        }
-        return "The link is invalid or broken!";
     }
 
     @RequestMapping(method = RequestMethod.PUT,value = "/addPhoto/{username}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

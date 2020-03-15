@@ -13,6 +13,7 @@ public interface UserService {
     public User updateUser(User user);
     public String encodedStringOfImage(Long id);
     public User findByUsername(String username);
+    public User findByEmail(String email);
     public User findByUsernameOrEmail(String username,String email);
     public void addRoleToUser(String username, RoleName role);
     Optional<User> findById(Long id);

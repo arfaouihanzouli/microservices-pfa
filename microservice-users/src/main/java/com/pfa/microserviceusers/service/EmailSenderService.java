@@ -2,7 +2,9 @@ package com.pfa.microserviceusers.service;
 
 import com.pfa.microserviceusers.models.User;
 import com.pfa.microserviceusers.models.token.ConfirmationToken;
+import com.pfa.microserviceusers.models.token.PasswordRestToken;
 import com.pfa.microserviceusers.repository.ConfirmationTokenRepository;
+import com.pfa.microserviceusers.repository.ResetPasswordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -22,6 +24,9 @@ public class EmailSenderService {
     @Autowired
     private ConfirmationTokenRepository confirmationTokenRepository;
 
+    @Autowired
+    private ResetPasswordRepository resetPasswordRepository;
+
     @Value("${spring.mail.username}")
     private String emailSender;
 
@@ -33,7 +38,7 @@ public class EmailSenderService {
     private final Logger log = LoggerFactory.getLogger(ConfirmationToken.class);
 
     @Async
-    public void sendEmail(User user) {
+    public void sendConfirmationEmail(User user) {
         //log.info(user.getEmail());
         ConfirmationToken confirmationToken = new ConfirmationToken(user);
         //log.info(confirmationToken.getConfirmationToken());
@@ -44,7 +49,23 @@ public class EmailSenderService {
         mailMessage.setSubject("Complete Registration!");
         mailMessage.setFrom(emailSender);
         mailMessage.setText("To confirm your account, please click here : "
-                +"http://"+server+":"+port+"/users/confirm-account?token="+confirmationToken.getConfirmationToken());
+                +"http://"+server+":"+port+"/confirmation/confirm-account?token="+confirmationToken.getConfirmationToken());
+        javaMailSender.send(mailMessage);
+    }
+
+    @Async
+    public void sendResetPasswordEmail(User user) {
+        //log.info(user.getEmail());
+        PasswordRestToken passwordRestToken = new PasswordRestToken(user);
+        //log.info(confirmationToken.getConfirmationToken());
+        resetPasswordRepository.save(passwordRestToken);
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(user.getEmail());
+        mailMessage.setSubject("Reset password!");
+        mailMessage.setFrom(emailSender);
+        mailMessage.setText("To change your password, please click here : "
+                +"http://"+server+":"+port+"/reset-password/change?token="+passwordRestToken.getResetToken());
         javaMailSender.send(mailMessage);
     }
 

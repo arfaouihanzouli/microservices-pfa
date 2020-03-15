@@ -11,6 +11,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsernameIgnoreCase(String username);
+    User findByEmailIgnoreCase(String email);
     User findByUsernameOrEmailIgnoreCase(String username,String email);
     Optional<User> findById(Long id);
     @Query("select u.photo.encoded_string from User u where u.id = ?1")

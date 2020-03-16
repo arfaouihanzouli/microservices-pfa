@@ -48,18 +48,6 @@ public class ResetPasswordController {
         return "error";
     }
 
-//    @RequestMapping(value="/change", method= {RequestMethod.GET, RequestMethod.POST})
-//    public ResponseEntity<Object> changePassword(@RequestParam("token")String resetToken)
-//    {
-//        PasswordRestToken token = resetPasswordRepository.findByResetToken(resetToken);
-//        //System.out.println(token.getExpirationDate().after(new Date()));
-//        if(token != null && (token.getExpirationDate().after(new Date())))
-//        {
-//            return new ResponseEntity<>(new ApiResponse("Your token is valid, you can change your password",true), HttpStatus.OK);
-//        }
-//        return new ResponseEntity<>(new ApiResponse("The link is invalid or broken!",false), HttpStatus.LOCKED);
-//    }
-
     @PostMapping(value="/update")
     public String updatePassword(@ModelAttribute("resetObject") ResetPasswordRequest resetPasswordRequest)
     {
@@ -79,7 +67,5 @@ public class ResetPasswordController {
         user.setPassword(password);
         userService.saveUser(user);
         return "success";
-
-        //return new ResponseEntity<>(new ApiResponse("The link is invalid or broken!",false), HttpStatus.LOCKED);
     }
 }

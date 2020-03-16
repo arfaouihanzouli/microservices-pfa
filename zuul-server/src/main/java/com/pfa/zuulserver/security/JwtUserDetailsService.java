@@ -1,6 +1,5 @@
 package com.pfa.zuulserver.security;
 
-import com.pfa.zuulserver.beans.RoleBean;
 import com.pfa.zuulserver.beans.UserBean;
 import com.pfa.zuulserver.proxies.UsersProxy;
 import org.springframework.beans.factory.annotation.Autowired;

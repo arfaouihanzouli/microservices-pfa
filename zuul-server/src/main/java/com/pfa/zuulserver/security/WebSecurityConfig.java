@@ -1,6 +1,5 @@
 package com.pfa.zuulserver.security;
 
-import com.pfa.zuulserver.beans.RoleBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

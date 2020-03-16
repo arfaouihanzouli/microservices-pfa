@@ -1,5 +1,6 @@
 package com.pfa.zuulserver.security;
 
+import com.pfa.zuulserver.beans.RoleBean;
 import com.pfa.zuulserver.beans.UserBean;
 import com.pfa.zuulserver.proxies.UsersProxy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +29,7 @@ public class JwtUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
         Collection<GrantedAuthority> authorities=new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(String.valueOf(user.getRole())));
-//        user.getRoles().forEach(r->{
-//            authorities.add(new SimpleGrantedAuthority(r.getRole()));
-//        });
+        authorities.add(new SimpleGrantedAuthority(user.getRole()));
 
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
                 authorities);

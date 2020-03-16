@@ -6,7 +6,7 @@ public class UserBean {
 
     private String username;
     private String password;
-    private RoleBean role;
+    private String role;
 
 
 
@@ -28,11 +28,20 @@ public class UserBean {
 
 
 
-    public RoleBean getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(RoleBean role) {
+    public void setRole(String role) {
         this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "UserBean{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", role=" + role +
+                '}';
     }
 }

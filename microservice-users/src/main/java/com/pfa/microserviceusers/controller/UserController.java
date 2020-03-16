@@ -184,4 +184,15 @@ public class UserController {
                 new ApiResponse("Your password has been successfully changed!",true),
                 HttpStatus.OK);
     }
+
+    @PostMapping("/reset")
+    public void resetPassword(@RequestBody ResetPassword email)
+    {
+        User user=userService.findByEmail(email.getEmail());
+        if(user==null)
+        {
+            throw new RuntimeException("This user not exists");
+        }
+        emailSenderService.sendResetPasswordEmail(user);
+    }
 }

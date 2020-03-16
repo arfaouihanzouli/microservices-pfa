@@ -1,10 +1,12 @@
 package com.pfa.microserviceusers.requests;
 
 import com.pfa.microserviceusers.models.embedded.Address;
+import com.pfa.microserviceusers.models.enumuration.RoleName;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class RegistrationForm {
+public class RegistrationForm implements Serializable {
     private String username;
     private String password;
     private String repassword;
@@ -12,14 +14,41 @@ public class RegistrationForm {
     private String name;
     private String lastName;
     private String telephone;
-    private String address;
-    private String city;
-    private String country;
-    private String postcode;
+    private Address address;
+    private RoleName roleName;
     private String niveau;
     private String diplome;
     private String institut;
     private Date date_naissance;
+    private String nameEntreprise;
+
+    public RoleName getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(RoleName roleName) {
+        this.roleName = roleName;
+    }
+
+    public String getNameEntreprise() {
+        return nameEntreprise;
+    }
+
+    public void setNameEntreprise(String nameEntreprise) {
+        this.nameEntreprise = nameEntreprise;
+    }
+
+    public RegistrationForm() {
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -74,38 +103,6 @@ public class RegistrationForm {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getPostcode() {
-        return postcode;
-    }
-
-    public void setPostcode(String postcode) {
-        this.postcode = postcode;
     }
 
     public String getNiveau() {

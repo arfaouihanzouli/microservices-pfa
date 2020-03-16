@@ -30,7 +30,7 @@ public class UserController {
 
     private final Logger log = LoggerFactory.getLogger(User.class);
 
-    @RequestMapping(value = "/signup",method = RequestMethod.POST)
+    @PostMapping(value = "/signup")
     public User signUp(@Valid @RequestBody RegistrationForm data) throws IOException
     {
         String username=data.getUsername();
@@ -46,19 +46,10 @@ public class UserController {
         {
             throw new RuntimeException("You must confirm your password");
         }
-        User u=new User();
-        u.setPassword(password);
-        u.setUsername(username);
-        u.setEmail(email);
-        u.setName(data.getName());
-        u.setLastName(data.getLastName());
-        u.setTelephone(data.getTelephone());
-        u.setRole(RoleName.USER);
-        if(data.getAddress()!=null && data.getNiveau()!=null && data.getCity()!=null && data.getCountry()!=null)
+        if(data.getRoleName()==RoleName.CANDIDAT)
         {
             Candidat candidat=new Candidat();
-            Address address=new Address(data.getAddress(),data.getCity(),data.getCountry(),data.getPostcode());
-            candidat.setAddress(address);
+            candidat.setAddress(data.getAddress());
             candidat.setDate_naissance(data.getDate_naissance());
             candidat.setDiplome(data.getDiplome());
             candidat.setInstitut(data.getInstitut());
@@ -74,10 +65,22 @@ public class UserController {
             emailSenderService.sendConfirmationEmail(candidat);
             return candidat;
         }
-        userService.saveUser(u);
-        emailSenderService.sendConfirmationEmail(u);
-        //log.info(u.getEmail());
-        return u;
+        else if(data.getRoleName()==RoleName.MANAGER)
+        {
+            Manager manager=new Manager();
+            manager.setPassword(password);
+            manager.setUsername(username);
+            manager.setEmail(email);
+            manager.setName(data.getName());
+            manager.setLastName(data.getLastName());
+            manager.setTelephone(data.getTelephone());
+            manager.setNameEntreprise(data.getNameEntreprise());
+            manager.setRole(RoleName.MANAGER);
+            userService.saveUser(manager);
+            emailSenderService.sendConfirmationEmail(manager);
+            return manager;
+        }
+        throw new ResourceNotFoundException("User not registred!! Check your form of registration!");
     }
 
     @RequestMapping(method = RequestMethod.PUT,value = "/addPhoto/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

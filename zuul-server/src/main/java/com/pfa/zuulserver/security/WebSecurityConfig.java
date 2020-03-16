@@ -55,14 +55,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // dont authenticate this particular request
                 .authorizeRequests().antMatchers("/authenticate",
                 "/microservice-users/users/findByUsername/**",
+                "/microservice-users/users/reset",
                 "/microservice-users/users/findByUsernameOrEmail/**",
                 "/microservice-users/users/signup",
-                "/**/users/confirm-account?token=**").permitAll().
-                antMatchers("/microservice-users/**").hasAuthority("ADMIN")
+                "/microservice-users/confirmation/**",
+                "/microservice-users/reset-password/**").permitAll()
+                .antMatchers("/microservice-users/candidats/**").hasAuthority("CANDIDAT")
+                .antMatchers("/microservice-users/managers/**").hasAuthority("MANAGER")
+                .antMatchers("/microservice-users/**").hasAuthority("ADMIN")
                 .antMatchers("/microservice-cv/**").hasAuthority("CANDIDAT")
-                .antMatchers("/microservice-offers/**").hasAuthority("MANAGER").
+                .antMatchers("/microservice-offers/**").hasAuthority("MANAGER")
+
                 // all other requests need to be authenticated
-                        anyRequest().authenticated().and().
+                        .anyRequest().authenticated().and().
                 // make sure we use stateless session; session won't be used to
                 // store user's state.
                         exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()

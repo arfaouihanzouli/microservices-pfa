@@ -56,9 +56,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers("/authenticate",
                 "/microservice-users/users/findByUsername/**",
                 "/microservice-users/users/findByUsernameOrEmail/**",
-                "/microservice-users/users/signup").permitAll().
+                "/microservice-users/users/signup",
+                "/**/users/confirm-account?token=**").permitAll().
                 antMatchers("/microservice-users/**").hasAuthority("ADMIN")
-                .antMatchers("/microservice-cv/**").hasAuthority("USER")
+                .antMatchers("/microservice-cv/**").hasAuthority("CANDIDAT")
                 .antMatchers("/microservice-offers/**").hasAuthority("MANAGER").
                 // all other requests need to be authenticated
                         anyRequest().authenticated().and().

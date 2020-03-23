@@ -3,10 +3,8 @@ package com.pfa.zuulserver.beans;
 import java.io.Serializable;
 import java.util.Date;
 
-public class UserBean implements Serializable {
-
+public class UserWithoutPassword implements Serializable {
     private String username;
-    private String password;
     private String role;
     private String email;
     private String name;
@@ -20,7 +18,8 @@ public class UserBean implements Serializable {
     private Date date_naissance;
     private String nameEntreprise;
 
-
+    public UserWithoutPassword() {
+    }
 
     public String getUsername() {
         return username;
@@ -30,14 +29,13 @@ public class UserBean implements Serializable {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getRole() {
+        return role;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setRole(String role) {
+        this.role = role;
     }
-
 
     public String getEmail() {
         return email;
@@ -125,39 +123,5 @@ public class UserBean implements Serializable {
 
     public void setNameEntreprise(String nameEntreprise) {
         this.nameEntreprise = nameEntreprise;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    @Override
-    public String toString() {
-        return "UserBean{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", role=" + role +
-                '}';
-    }
-    public UserWithoutPassword mapToUserWithoutPassword(){
-        UserWithoutPassword u =new UserWithoutPassword();
-        u.setAddress(this.getAddress());
-        u.setDate_naissance(this.getDate_naissance());
-        u.setDiplome(this.getDiplome());
-        u.setInstitut(this.getInstitut());
-        u.setNiveau(this.getNiveau());
-        u.setUsername(this.getUsername());
-        u.setEmail(this.getEmail());
-        u.setName(this.getName());
-        u.setPhoto(this.getPhoto());
-        u.setLastName(this.getLastName());
-        u.setTelephone(this.getTelephone());
-        u.setRole(this.getRole());
-        u.setNameEntreprise(this.getNameEntreprise());
-        return u;
     }
 }

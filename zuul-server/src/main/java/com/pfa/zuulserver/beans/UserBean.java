@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class UserBean implements Serializable {
-
+    private long id;
     private String username;
     private String password;
     private String role;
@@ -24,6 +24,13 @@ public class UserBean implements Serializable {
     private boolean isExpired;
     private boolean isEnabled;
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;
@@ -180,6 +187,7 @@ public class UserBean implements Serializable {
     }
     public UserWithoutPassword mapToUserWithoutPassword(){
         UserWithoutPassword u =new UserWithoutPassword();
+        u.setId(this.getId());
         u.setAddress(this.getAddress());
         u.setDate_naissance(this.getDate_naissance());
         u.setDiplome(this.getDiplome());

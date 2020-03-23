@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class UserWithoutPassword implements Serializable {
+    private long id;
     private String username;
     private String role;
     private String email;
@@ -22,6 +23,14 @@ public class UserWithoutPassword implements Serializable {
     private boolean isExpired;
     private boolean isEnabled;
     public UserWithoutPassword() {
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getUsername() {

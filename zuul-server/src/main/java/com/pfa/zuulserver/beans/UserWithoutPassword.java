@@ -17,7 +17,10 @@ public class UserWithoutPassword implements Serializable {
     private String institut;
     private Date date_naissance;
     private String nameEntreprise;
-
+    private Integer active;
+    private boolean isLoacked;
+    private boolean isExpired;
+    private boolean isEnabled;
     public UserWithoutPassword() {
     }
 
@@ -123,5 +126,37 @@ public class UserWithoutPassword implements Serializable {
 
     public void setNameEntreprise(String nameEntreprise) {
         this.nameEntreprise = nameEntreprise;
+    }
+
+    public Integer getActive() {
+        return active;
+    }
+
+    public void setActive(Integer active) {
+        this.active = active;
+    }
+
+    public boolean isLoacked() {
+        return isLoacked;
+    }
+
+    public void setLoacked(boolean loacked) {
+        isLoacked = loacked;
+    }
+
+    public boolean isExpired() {
+        return isExpired;
+    }
+
+    public void setExpired(boolean expired) {
+        isExpired = expired;
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
     }
 }

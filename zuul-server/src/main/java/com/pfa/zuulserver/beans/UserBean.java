@@ -19,7 +19,10 @@ public class UserBean implements Serializable {
     private String institut;
     private Date date_naissance;
     private String nameEntreprise;
-
+    private Integer active;
+    private boolean isLoacked;
+    private boolean isExpired;
+    private boolean isEnabled;
 
 
     public String getUsername() {
@@ -135,6 +138,38 @@ public class UserBean implements Serializable {
         this.role = role;
     }
 
+    public Integer getActive() {
+        return active;
+    }
+
+    public void setActive(Integer active) {
+        this.active = active;
+    }
+
+    public boolean isLoacked() {
+        return isLoacked;
+    }
+
+    public void setLoacked(boolean loacked) {
+        isLoacked = loacked;
+    }
+
+    public boolean isExpired() {
+        return isExpired;
+    }
+
+    public void setExpired(boolean expired) {
+        isExpired = expired;
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
+
     @Override
     public String toString() {
         return "UserBean{" +
@@ -158,6 +193,10 @@ public class UserBean implements Serializable {
         u.setTelephone(this.getTelephone());
         u.setRole(this.getRole());
         u.setNameEntreprise(this.getNameEntreprise());
+        u.setActive(active);
+        u.setEnabled(isEnabled);
+        u.setExpired(isExpired);
+        u.setLoacked(this.isLoacked());
         return u;
     }
 }

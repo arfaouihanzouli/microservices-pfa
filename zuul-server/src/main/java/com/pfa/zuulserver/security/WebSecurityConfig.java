@@ -62,6 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/microservice-users/users/reset",
                 "/microservice-users/users/findByUsernameOrEmail/**",
                 "/microservice-users/users/signup",
+		"/microservice-users/users/addPhoto/**",
                 "/microservice-users/confirmation/**",
                 "/microservice-users/reset-password/**").permitAll()
                 .antMatchers("/microservice-users/candidats/**").hasAuthority("CANDIDAT")
@@ -80,11 +81,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // Add a filter to validate the tokens with every request
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
-    @Bean
+    /*@Bean
     CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new
                 UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
         return source;
-    }
+    }*/
 }

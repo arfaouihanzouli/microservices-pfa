@@ -62,9 +62,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/microservice-users/users/reset",
                 "/microservice-users/users/findByUsernameOrEmail/**",
                 "/microservice-users/users/signup",
-		"/microservice-users/users/addPhoto/**",
                 "/microservice-users/confirmation/**",
                 "/microservice-users/reset-password/**").permitAll()
+		        .antMatchers("/microservice-users/users/addPhoto/**").authenticated()
+		        .antMatchers("/microservice-users/users/update-password/**").authenticated()
                 .antMatchers("/microservice-users/candidats/**").hasAuthority("CANDIDAT")
                 .antMatchers("/microservice-users/managers/**").hasAuthority("MANAGER")
                 .antMatchers("/microservice-users/**").hasAuthority("ADMIN")

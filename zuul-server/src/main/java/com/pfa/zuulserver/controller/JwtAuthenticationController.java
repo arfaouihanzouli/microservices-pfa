@@ -1,5 +1,8 @@
 package com.pfa.zuulserver.controller;
 
+import com.pfa.zuulserver.beans.UserBean;
+import com.pfa.zuulserver.beans.UserWithoutPassword;
+import com.pfa.zuulserver.proxies.UsersProxy;
 import com.pfa.zuulserver.security.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +30,8 @@ public class JwtAuthenticationController {
     @Autowired
     private JwtUserDetailsService userDetailsService;
 
+    @Autowired
+    private UsersProxy proxy;
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody JwtRequest authenticationRequest) throws Exception {
         //System.out.println(authenticationRequest);
@@ -35,7 +40,9 @@ public class JwtAuthenticationController {
                 .loadUserByUsername(authenticationRequest.getUsername());
         //System.out.println(userDetails.getUsername()+userDetails.getAuthorities());
         final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token));
+        UserWithoutPassword user=proxy.findByUsernameOrEmail(authenticationRequest.getUsername())
+                .mapToUserWithoutPassword();
+        return ResponseEntity.ok(new JwtResponse(token,user));
     }
 
     private void authenticate(String username, String password) throws Exception {

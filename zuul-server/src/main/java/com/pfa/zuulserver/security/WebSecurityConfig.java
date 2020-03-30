@@ -14,6 +14,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -52,6 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         // We don't need CSRF for this example
         httpSecurity.csrf().disable()
+                .cors().and()
                 // dont authenticate this particular request
                 .authorizeRequests().antMatchers("/authenticate",
                 "/microservice-users/users/findByUsername/**",
@@ -60,6 +64,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/microservice-users/users/signup",
                 "/microservice-users/confirmation/**",
                 "/microservice-users/reset-password/**").permitAll()
+		        .antMatchers("/microservice-users/users/addPhoto/**").authenticated()
+		        .antMatchers("/microservice-users/users/update-password/**").authenticated()
                 .antMatchers("/microservice-users/candidats/**").hasAuthority("CANDIDAT")
                 .antMatchers("/microservice-users/managers/**").hasAuthority("MANAGER")
                 .antMatchers("/microservice-users/**").hasAuthority("ADMIN")
@@ -76,4 +82,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // Add a filter to validate the tokens with every request
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
+    /*@Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new
+                UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        return source;
+    }*/
 }

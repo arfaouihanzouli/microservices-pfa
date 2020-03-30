@@ -3,10 +3,9 @@ package com.pfa.zuulserver.beans;
 import java.io.Serializable;
 import java.util.Date;
 
-public class UserBean implements Serializable {
+public class UserWithoutPassword implements Serializable {
     private long id;
     private String username;
-    private String password;
     private String role;
     private String email;
     private String name;
@@ -23,6 +22,8 @@ public class UserBean implements Serializable {
     private boolean isLoacked;
     private boolean isExpired;
     private boolean isEnabled;
+    public UserWithoutPassword() {
+    }
 
     public long getId() {
         return id;
@@ -40,14 +41,13 @@ public class UserBean implements Serializable {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getRole() {
+        return role;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setRole(String role) {
+        this.role = role;
     }
-
 
     public String getEmail() {
         return email;
@@ -137,14 +137,6 @@ public class UserBean implements Serializable {
         this.nameEntreprise = nameEntreprise;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public Integer getActive() {
         return active;
     }
@@ -175,36 +167,5 @@ public class UserBean implements Serializable {
 
     public void setEnabled(boolean enabled) {
         isEnabled = enabled;
-    }
-
-    @Override
-    public String toString() {
-        return "UserBean{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", role=" + role +
-                '}';
-    }
-    public UserWithoutPassword mapToUserWithoutPassword(){
-        UserWithoutPassword u =new UserWithoutPassword();
-        u.setId(this.getId());
-        u.setAddress(this.getAddress());
-        u.setDate_naissance(this.getDate_naissance());
-        u.setDiplome(this.getDiplome());
-        u.setInstitut(this.getInstitut());
-        u.setNiveau(this.getNiveau());
-        u.setUsername(this.getUsername());
-        u.setEmail(this.getEmail());
-        u.setName(this.getName());
-        u.setPhoto(this.getPhoto());
-        u.setLastName(this.getLastName());
-        u.setTelephone(this.getTelephone());
-        u.setRole(this.getRole());
-        u.setNameEntreprise(this.getNameEntreprise());
-        u.setActive(active);
-        u.setEnabled(isEnabled);
-        u.setExpired(isExpired);
-        u.setLoacked(this.isLoacked());
-        return u;
     }
 }

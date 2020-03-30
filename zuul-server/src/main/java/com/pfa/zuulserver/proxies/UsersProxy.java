@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@FeignClient(name = "zuul")
+@FeignClient(name = "zuul-server")
 @RibbonClient(name = "microservice-users")
 public interface UsersProxy {
 

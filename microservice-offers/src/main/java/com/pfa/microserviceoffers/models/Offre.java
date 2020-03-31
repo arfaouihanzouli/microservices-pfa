@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.pfa.microserviceoffers.models.audit.AbstractEntity;
 import com.pfa.microserviceoffers.models.enumuration.Niveau;
 import com.pfa.microserviceoffers.models.enumuration.TypeOffre;
@@ -13,6 +15,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,14 +29,14 @@ public class Offre extends AbstractEntity {
 
     //@JsonIgnore
     @Column
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
-    private LocalDate dateOffre;
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    private LocalDateTime dateOffre;
 
     @Column
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
-    private LocalDate dateFin;
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    private LocalDateTime dateFin;
 
     @Column
     private String poste;
@@ -76,7 +79,7 @@ public class Offre extends AbstractEntity {
         super();
     }
 
-    public Offre(String titre, LocalDate dateOffre, LocalDate dateFin, String poste, String lieu, TypeOffre typeOffre, String description, int anneeExperience, Niveau niveauDemande, boolean etat, Long idManager, Organisme organisme) {
+    public Offre(String titre, LocalDateTime dateOffre, LocalDateTime dateFin, String poste, String lieu, TypeOffre typeOffre, String description, int anneeExperience, Niveau niveauDemande, boolean etat, Long idManager, Organisme organisme) {
         super();
         this.titre = titre;
         this.dateOffre = dateOffre;
@@ -100,19 +103,19 @@ public class Offre extends AbstractEntity {
         this.titre = titre;
     }
 
-    public LocalDate getDateOffre() {
+    public LocalDateTime getDateOffre() {
         return dateOffre;
     }
 
-    public void setDateOffre(LocalDate dateOffre) {
+    public void setDateOffre(LocalDateTime dateOffre) {
         this.dateOffre = dateOffre;
     }
 
-    public LocalDate getDateFin() {
+    public LocalDateTime getDateFin() {
         return dateFin;
     }
 
-    public void setDateFin(LocalDate dateFin) {
+    public void setDateFin(LocalDateTime dateFin) {
         this.dateFin = dateFin;
     }
 

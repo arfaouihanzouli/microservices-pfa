@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -62,31 +64,31 @@ public class MicroserviceOffersApplication implements CommandLineRunner {
 
 		SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		//simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+2"));
-		LocalDate d=LocalDate.parse("2015-10-16");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		Offre of1=new Offre("Développeur JAVA H/F",
-				LocalDate.parse("2020-03-31"),
-				LocalDate.parse("2020-07-04")
+				LocalDateTime.parse("2020-03-31 14:25:15",formatter),
+				LocalDateTime.parse("2020-07-04 14:25:15",formatter)
 				,"Développeur JAVA","Tunis", TypeOffre.CDD,
 				"Cette offre nécessite l'expérience en JAVA",2, Niveau.Licence,
 				true, (long) 2,o1);
 
 		Offre of2=new Offre("Développeur Angular 5 H/F",
-				LocalDate.parse("2020-03-30"),
-				LocalDate.parse("2020-05-10")
+				LocalDateTime.parse("2020-03-30 14:25:15",formatter),
+				LocalDateTime.now()
 				,"Développeur Angular","Ariana", TypeOffre.TempsPartiel,
 				"Cette offre nécessite l'expérience en Angular",1, Niveau.Mastere,
 				true, (long) 2,o2);
 
 		Offre of3=new Offre("Développeur Fullstack H/F",
-				LocalDate.parse("2020-04-10"),
-				LocalDate.parse("2020-05-21")
+				LocalDateTime.parse("2020-04-10 14:25:15",formatter),
+				LocalDateTime.parse("2020-05-21 14:25:15",formatter)
 				,"Développeur Fullstack Spring boot et Angular 5+","Mannouba", TypeOffre.TempsPlein,
 				"Cette offre nécessite l'expérience en JAVA Spring boot et Angular",4, Niveau.Ingenieur,
 				true, (long) 2,o3);
 
 		Offre of4=new Offre("Designer H/F",
-				LocalDate.parse("2020-04-15"),
-				LocalDate.parse("2020-04-29")
+				LocalDateTime.parse("2020-04-15 14:25:15",formatter),
+				LocalDateTime.parse("2020-04-29 14:25:15",formatter)
 				,"Web and mobile Designer","Ben Arous", TypeOffre.TravailTemporaire,
 				"Cette offre nécessite l'expérience en Photoshop et Adobe ...",3, Niveau.Autre,
 				true, (long) 2,o1);

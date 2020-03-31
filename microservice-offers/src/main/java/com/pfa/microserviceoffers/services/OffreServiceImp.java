@@ -9,13 +9,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.Date;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
-import java.util.TimeZone;
 
 @Service
 public class OffreServiceImp implements OffreService{
@@ -27,6 +26,8 @@ public class OffreServiceImp implements OffreService{
     public Optional<Offre> findById(Long id) {
         return this.offreRepository.findById(id);
     }
+
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public Page<Offre> findByOrganismeId(Long organismeId, Pageable pageable) {
@@ -114,35 +115,32 @@ public class OffreServiceImp implements OffreService{
     }
 
     @Override
-    public List<Offre> findAllByDateOffre(String date) throws ParseException {
-//        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
-//        Date d=simpleDateFormat.parse(date);
-        return this.offreRepository.findAllByDateOffre(LocalDate.parse(date));
+    public List<Offre> findAllByDateOffre(String date) throws DateTimeParseException{
+        return this.offreRepository.findAllByDateOffre(LocalDateTime.parse(date,formatter));
     }
 
     @Override
-    public List<Offre> findAllByDateFin(String date) throws ParseException{
-//        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
-//        Date d=simpleDateFormat.parse(date);
-        return this.offreRepository.findAllByDateFin(LocalDate.parse(date));
+    public List<Offre> findAllByDateFin(String date) throws DateTimeParseException{
+        return this.offreRepository.findAllByDateFin(LocalDateTime.parse(date,formatter));
     }
 
     @Override
-    public List<Offre> findAllByDateOffreBetween(String date1, String date2) throws ParseException{
-//        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
-//        Date d1=simpleDateFormat.parse(date1);
-//        Date d2=simpleDateFormat.parse(date2);
-        return this.offreRepository.findAllByDateOffreBetween(LocalDate.parse(date1),LocalDate.parse(date2));
+    public List<Offre> findAllByDateOffreBetween(String date1, String date2) throws DateTimeParseException{
+        return this.offreRepository.findAllByDateOffreBetween(LocalDateTime.parse(date1,formatter),LocalDateTime.parse(date2,formatter));
     }
 
     @Override
-    public List<Offre> findAllOffresNotEnded(String dateFin) throws ParseException{
-//        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
-//        Date d=simpleDateFormat.parse(dateFin);
-        return this.offreRepository.findAllOffresNotEnded(LocalDate.parse(dateFin));
+    public List<Offre> findAllOffresNotEndedBefore(String dateFin) throws DateTimeParseException {
+        return this.offreRepository.findAllByDateFinBefore(LocalDateTime.parse(dateFin,formatter));
+    }
+
+    @Override
+    public List<Offre> findAllOffresNotEnded() {
+        return this.offreRepository.findAllByDateFinAfter(LocalDateTime.now());
+    }
+
+    @Override
+    public List<Offre> findAllOffresEnded() {
+        return this.offreRepository.findAllByDateFinBefore(LocalDateTime.now());
     }
 }

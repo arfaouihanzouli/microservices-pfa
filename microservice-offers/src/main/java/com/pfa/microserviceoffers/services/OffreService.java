@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.text.ParseException;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,8 +31,10 @@ public interface OffreService  {
     List<Offre> findAllByTypeOffre(TypeOffre typeOffre);
     List<Offre> findAllByNiveau(Niveau niveau);
     List<Offre> findAllByDescriptionContainingIgnoreCase(String description);
-    List<Offre> findAllByDateOffre(String date) throws ParseException;
-    List<Offre> findAllByDateFin(String date) throws ParseException;
-    List<Offre> findAllByDateOffreBetween(String date1, String date2) throws ParseException;
-    List<Offre> findAllOffresNotEnded(String dateFin) throws ParseException;
+    List<Offre> findAllByDateOffre(String date) throws DateTimeParseException;
+    List<Offre> findAllByDateFin(String date) throws DateTimeParseException;
+    List<Offre> findAllByDateOffreBetween(String date1, String date2) throws DateTimeParseException;
+    List<Offre> findAllOffresNotEndedBefore(String dateFin) throws DateTimeParseException;
+    List<Offre> findAllOffresNotEnded();
+    List<Offre> findAllOffresEnded();
 }

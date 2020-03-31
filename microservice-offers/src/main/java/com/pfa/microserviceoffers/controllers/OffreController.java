@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -143,38 +145,55 @@ public class OffreController {
     }
     @GetMapping("/getAllByDateOffre/{date}")
     List<Offre> getAllByDateOffre(@PathVariable(value = "date") String date){
-        try {
+        try{
             return this.offreService.findAllByDateOffre(date);
-        } catch (ParseException e) {
-            throw new BadRequestException("Requête rejeté, vérifie la date!");
+        }catch (DateTimeParseException de)
+        {
+            throw new BadRequestException("Requête rejeté, verifie la date envoyé, (yyyy-mm-dd HH:mm:ss)");
         }
     }
 
     @GetMapping("/getAllByDateFin/{date}")
     List<Offre> getAllByDateFin(@PathVariable(value = "date") String date){
-        try {
+        try{
             return this.offreService.findAllByDateFin(date);
-        } catch (ParseException e) {
-            throw new BadRequestException("Requête rejeté, vérifie la date!");
+        }catch (DateTimeParseException de)
+        {
+            throw new BadRequestException("Requête rejeté, verifie la date envoyé, (yyyy-mm-dd HH:mm:ss)");
         }
     }
 
     @GetMapping("/getAllByDateOffreBetween/{date1}/{date2}")
     List<Offre> getAllByDateOffreBetween(@PathVariable(value = "date1") String date1,
                                          @PathVariable(value = "date2") String date2){
-        try {
+        try{
             return this.offreService.findAllByDateOffreBetween(date1,date2);
-        } catch (ParseException e) {
-            throw new BadRequestException("Requête rejeté, vérifie les dates!");
+        }catch (DateTimeParseException de)
+        {
+            throw new BadRequestException("Requête rejeté, verifie la date envoyé, (yyyy-mm-dd HH:mm:ss)");
         }
     }
-    @GetMapping("/getAllNotEnded/{date}")
-    List<Offre> getAllOffresNotEnded(@PathVariable(value = "date") String dateFin){
-        try {
-            return this.offreService.findAllOffresNotEnded(dateFin);
-        } catch (ParseException e) {
-            throw new BadRequestException("Requête rejeté, vérifie la date!");
+    @GetMapping("/getAllNotEndedBefore/{date}")
+    List<Offre> getAllOffresNotEndedBefore(@PathVariable(value = "date") String dateFin){
+        try{
+            return this.offreService.findAllOffresNotEndedBefore(dateFin);
+        }catch (DateTimeParseException de)
+        {
+            throw new BadRequestException("Requête rejeté, verifie la date envoyé, (yyyy-mm-dd HH:mm:ss)");
         }
+    }
+    @GetMapping("/getAllNotEnded")
+    List<Offre> getAllOffresNotEnded(){
+        try{
+            return this.offreService.findAllOffresNotEnded();
+        }catch (DateTimeParseException de)
+        {
+            throw new BadRequestException("Requête rejeté, verifie la date envoyé, (yyyy-mm-dd HH:mm:ss)");
+        }
+    }
+    @GetMapping("/getAllEnded")
+    public List<Offre> getAllOffresEnded() {
+        return this.offreService.findAllOffresEnded();
     }
     @GetMapping("/getAllTypes")
     public List<String> getAllTypes()

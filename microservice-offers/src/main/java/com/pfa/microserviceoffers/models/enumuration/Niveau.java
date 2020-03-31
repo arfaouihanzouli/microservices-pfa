@@ -11,4 +11,12 @@ public enum Niveau {
     Niveau(String niveau) {
         this.niveau=niveau;
     }
+
+    public String getNiveau() {
+        return niveau;
+    }
+
+    public void setNiveau(String niveau) {
+        this.niveau = niveau;
+    }
 }

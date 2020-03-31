@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -130,11 +131,11 @@ public class OffreController {
     }
     @GetMapping("/getAllByTypeOffre/{type}")
     List<Offre> getAllByTypeOffre(@PathVariable(value = "type") TypeOffre type){
-        return this.offreService.findAllByTypeOffreContainingIgnoreCase(type);
+        return this.offreService.findAllByTypeOffre(type);
     }
     @GetMapping("/getAllByNiveau/{niveau}")
     List<Offre> getAllByNiveau(@PathVariable(value = "niveau") Niveau niveau){
-        return this.offreService.findAllByNiveauContainingIgnoreCase(niveau);
+        return this.offreService.findAllByNiveau(niveau);
     }
     @GetMapping("/getAllByDescription/{description}")
     List<Offre> getAllByDescription(@PathVariable(value = "description") String description){
@@ -158,7 +159,7 @@ public class OffreController {
         }
     }
 
-    @GetMapping("/getAllByDateFin/{date1}/{date2}")
+    @GetMapping("/getAllByDateOffreBetween/{date1}/{date2}")
     List<Offre> getAllByDateOffreBetween(@PathVariable(value = "date1") String date1,
                                          @PathVariable(value = "date2") String date2){
         try {
@@ -167,12 +168,32 @@ public class OffreController {
             throw new BadRequestException("Requête rejeté, vérifie les dates!");
         }
     }
-    @GetMapping("/getAllByDateFin/{date}")
+    @GetMapping("/getAllNotEnded/{date}")
     List<Offre> getAllOffresNotEnded(@PathVariable(value = "date") String dateFin){
         try {
             return this.offreService.findAllOffresNotEnded(dateFin);
         } catch (ParseException e) {
             throw new BadRequestException("Requête rejeté, vérifie la date!");
         }
+    }
+    @GetMapping("/getAllTypes")
+    public List<String> getAllTypes()
+    {
+        List<String> l=new ArrayList<>();
+        for(TypeOffre typeOffre:TypeOffre.values())
+        {
+            l.add(typeOffre.getType());
+        }
+        return l;
+    }
+    @GetMapping("/getAllNiveau")
+    public List<String> getAllNiveau()
+    {
+        List<String> l=new ArrayList<>();
+        for(Niveau niveau:Niveau.values())
+        {
+            l.add(niveau.getNiveau());
+        }
+        return l;
     }
 }

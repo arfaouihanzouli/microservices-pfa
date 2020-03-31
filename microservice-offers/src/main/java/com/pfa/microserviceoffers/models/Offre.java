@@ -1,6 +1,10 @@
 package com.pfa.microserviceoffers.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.pfa.microserviceoffers.models.audit.AbstractEntity;
 import com.pfa.microserviceoffers.models.enumuration.Niveau;
 import com.pfa.microserviceoffers.models.enumuration.TypeOffre;
@@ -8,6 +12,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,10 +26,14 @@ public class Offre extends AbstractEntity {
 
     //@JsonIgnore
     @Column
-    private Date dateOffre;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    private LocalDate dateOffre;
 
     @Column
-    private Date dateFin;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    private LocalDate dateFin;
 
     @Column
     private String poste;
@@ -67,7 +76,7 @@ public class Offre extends AbstractEntity {
         super();
     }
 
-    public Offre(String titre, Date dateOffre, Date dateFin, String poste, String lieu, TypeOffre typeOffre, String description, int anneeExperience, Niveau niveauDemande, boolean etat, Long idManager, Organisme organisme) {
+    public Offre(String titre, LocalDate dateOffre, LocalDate dateFin, String poste, String lieu, TypeOffre typeOffre, String description, int anneeExperience, Niveau niveauDemande, boolean etat, Long idManager, Organisme organisme) {
         super();
         this.titre = titre;
         this.dateOffre = dateOffre;
@@ -91,19 +100,19 @@ public class Offre extends AbstractEntity {
         this.titre = titre;
     }
 
-    public Date getDateOffre() {
+    public LocalDate getDateOffre() {
         return dateOffre;
     }
 
-    public void setDateOffre(Date dateOffre) {
+    public void setDateOffre(LocalDate dateOffre) {
         this.dateOffre = dateOffre;
     }
 
-    public Date getDateFin() {
+    public LocalDate getDateFin() {
         return dateFin;
     }
 
-    public void setDateFin(Date dateFin) {
+    public void setDateFin(LocalDate dateFin) {
         this.dateFin = dateFin;
     }
 

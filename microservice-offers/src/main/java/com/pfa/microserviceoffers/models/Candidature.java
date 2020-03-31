@@ -6,11 +6,10 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.time.Instant;
+import java.util.Date;
 
 @Entity
-@AttributeOverrides({
-        @AttributeOverride(name = "dateCandidature", column = @Column(name = "created_date"))
-})
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Candidature extends AbstractEntity {
 
@@ -26,6 +25,9 @@ public class Candidature extends AbstractEntity {
     @Column
     private Long idCv;
 
+    @Column
+    private Date dateCandidature;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "offre_id",nullable = false)
@@ -40,6 +42,13 @@ public class Candidature extends AbstractEntity {
         this.idCandidat = idCandidat;
         this.idCv = idCv;
         this.offre = offre;
+    }
+    public Date getDateCandidature() {
+        return dateCandidature;
+    }
+
+    public void setDateCandidature(Date dateCandidature) {
+        this.dateCandidature = dateCandidature;
     }
 
     public String getCommentaire() {

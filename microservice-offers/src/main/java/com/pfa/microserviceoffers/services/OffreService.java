@@ -27,8 +27,8 @@ public interface OffreService  {
     List<Offre> findAllByTitreContainingIgnoreCase(String titre);
     List<Offre> findAllByPosteContainingIgnoreCase(String poste);
     List<Offre> findAllByLieuContainingIgnoreCase(String lieu);
-    List<Offre> findAllByTypeOffreContainingIgnoreCase(TypeOffre typeOffre);
-    List<Offre> findAllByNiveauContainingIgnoreCase(Niveau niveau);
+    List<Offre> findAllByTypeOffre(TypeOffre typeOffre);
+    List<Offre> findAllByNiveau(Niveau niveau);
     List<Offre> findAllByDescriptionContainingIgnoreCase(String description);
     List<Offre> findAllByDateOffre(String date) throws ParseException;
     List<Offre> findAllByDateFin(String date) throws ParseException;

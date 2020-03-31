@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -15,5 +17,5 @@ public interface CandidatureRepository extends JpaRepository<Candidature, Long> 
     List<Candidature> findByOffreId(Long idOffre);
     List<Candidature> findByIdCv(Long idCandidat);
     List<Candidature> findByEtat(boolean etat);
-    List<Candidature> findByDateCandidature(Instant date);
+    List<Candidature> findByDateCandidature(LocalDate date);
 }

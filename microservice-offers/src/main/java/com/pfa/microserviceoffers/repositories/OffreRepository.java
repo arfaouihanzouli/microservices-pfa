@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -28,12 +29,12 @@ public interface OffreRepository extends JpaRepository<Offre,Long> {
     List<Offre> findAllByTitreContainingIgnoreCase(String titre);
     List<Offre> findAllByPosteContainingIgnoreCase(String poste);
     List<Offre> findAllByLieuContainingIgnoreCase(String lieu);
-    List<Offre> findAllByTypeOffreContainingIgnoreCase(TypeOffre typeOffre);
-    List<Offre> findAllByNiveauContainingIgnoreCase(Niveau niveau);
+    List<Offre> findAllByTypeOffre(TypeOffre typeOffre);
+    List<Offre> findAllByNiveauDemande(Niveau niveau);
     List<Offre> findAllByDescriptionContainingIgnoreCase(String description);
-    List<Offre> findAllByDateOffre(Date date);
-    List<Offre> findAllByDateFin(Date date);
-    List<Offre> findAllByDateOffreBetween(Date date1, Date date2);
+    List<Offre> findAllByDateOffre(LocalDate date);
+    List<Offre> findAllByDateFin(LocalDate date);
+    List<Offre> findAllByDateOffreBetween(LocalDate date1, LocalDate date2);
     @Query("select o from Offre o where o.dateFin <= :dateFin")
-    List<Offre> findAllOffresNotEnded(@Param("dateFin") Date dateFin);
+    List<Offre> findAllOffresNotEnded(@Param("dateFin") LocalDate dateFin);
 }

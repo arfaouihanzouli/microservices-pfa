@@ -19,12 +19,12 @@ public class CandidatureController {
     @Autowired
     private UsersProxy usersProxy;
 
-    @PostMapping("/add/candidat/{idCandidat}/offre/{idOffre}/cv/{idCv}")
-    public Candidature create(@Valid @RequestBody Candidature candidature,
-                              @PathVariable("idCandidat") Long idCandidat,
-                              @PathVariable("idOffre") Long idOffre,
-                              @PathVariable("idCv") Long idCv)
-    {
-
-    }
+//    @PostMapping("/add/candidat/{idCandidat}/offre/{idOffre}/cv/{idCv}")
+//    public Candidature create(@Valid @RequestBody Candidature candidature,
+//                              @PathVariable("idCandidat") Long idCandidat,
+//                              @PathVariable("idOffre") Long idOffre,
+//                              @PathVariable("idCv") Long idCv)
+//    {
+//
+//    }
 }

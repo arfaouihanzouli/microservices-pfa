@@ -2,10 +2,13 @@ package com.pfa.microserviceusers.controller;
 
 import com.pfa.microserviceusers.exceptions.ResourceNotFoundException;
 import com.pfa.microserviceusers.models.Candidat;
+import com.pfa.microserviceusers.models.Manager;
 import com.pfa.microserviceusers.models.User;
 import com.pfa.microserviceusers.repository.CandidatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/candidats")
@@ -29,5 +32,11 @@ public class CandidatController {
             c.setAddress(candidat.getAddress());
             return candidatRepository.save(c);
         }).orElseThrow(()-> new ResourceNotFoundException("Ce candidat n'existe pas!!!"));
+    }
+    @GetMapping("/findById/{id}")
+    public Candidat findById(@Valid @PathVariable Long id)
+    {
+        return this.candidatRepository.findById(id)
+                .orElseThrow(()->new ResourceNotFoundException("Ce manager : "+id+" n'existe pas"));
     }
 }

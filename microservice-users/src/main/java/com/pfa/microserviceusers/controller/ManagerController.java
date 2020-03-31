@@ -2,9 +2,12 @@ package com.pfa.microserviceusers.controller;
 
 import com.pfa.microserviceusers.exceptions.ResourceNotFoundException;
 import com.pfa.microserviceusers.models.Manager;
+import com.pfa.microserviceusers.models.User;
 import com.pfa.microserviceusers.repository.ManagerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/managers")
@@ -25,5 +28,12 @@ public class ManagerController {
             m.setNameEntreprise(manager.getNameEntreprise());
             return managerRepository.save(m);
         }).orElseThrow(()-> new ResourceNotFoundException("Ce manager n'existe pas!!!"));
+    }
+
+    @GetMapping("/findById/{id}")
+    public Manager findById(@Valid @PathVariable Long id)
+    {
+        return this.managerRepository.findById(id)
+                .orElseThrow(()->new ResourceNotFoundException("Ce manager : "+id+" n'existe pas"));
     }
 }

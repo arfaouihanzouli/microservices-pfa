@@ -72,6 +72,11 @@ public class OffreController {
     @GetMapping("/getAll/{idManager}")
     public List<Offre> getAllOffresByManager(@PathVariable(value = "idManager") Long id)
     {
+        UserBean userBean=this.usersProxy.findById(id);
+        if(userBean==null)
+        {
+            throw new ResourceNotFoundException("L'utilisateur avec id :"+id+" n'existe pas, tu ne peux pas ajouter cette offre!!");
+        }
         return this.offreService.findByIdManager(id);
     }
     @PutMapping("/update/{idOffre}")

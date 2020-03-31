@@ -13,5 +13,8 @@ import javax.validation.Valid;
 public interface UsersProxy {
 
     @GetMapping("/managers/findById/{id}")
-    UserBean findById(@Valid @PathVariable Long id);
+    UserBean findManagerById(@Valid @PathVariable Long id);
+
+    @GetMapping("/candidats/findById/{id}")
+    UserBean findCandidatById(@Valid @PathVariable Long id);
 }

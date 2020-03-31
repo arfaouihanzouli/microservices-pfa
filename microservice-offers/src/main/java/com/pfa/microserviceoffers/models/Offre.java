@@ -1,6 +1,5 @@
 package com.pfa.microserviceoffers.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.pfa.microserviceoffers.models.audit.AbstractEntity;
 import com.pfa.microserviceoffers.models.enumuration.Niveau;
@@ -10,13 +9,12 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Offre extends AbstractEntity {
-
-    public Offre() {
-    }
 
     @Column
     private String titre;
@@ -60,8 +58,30 @@ public class Offre extends AbstractEntity {
     //@JsonIgnore
     private Organisme organisme;
 
+    @OneToMany(cascade = CascadeType.ALL,
+               fetch = FetchType.LAZY,
+                mappedBy = "offre")
+    private Set<Candidature> candidatures=new HashSet<>();
 
+    public Offre() {
+        super();
+    }
 
+    public Offre(String titre, Date dateOffre, Date dateFin, String poste, String lieu, TypeOffre typeOffre, String description, int anneeExperience, Niveau niveauDemande, boolean etat, Long idManager, Organisme organisme) {
+        super();
+        this.titre = titre;
+        this.dateOffre = dateOffre;
+        this.dateFin = dateFin;
+        this.poste = poste;
+        this.lieu = lieu;
+        this.typeOffre = typeOffre;
+        this.description = description;
+        this.anneeExperience = anneeExperience;
+        this.niveauDemande = niveauDemande;
+        this.etat = etat;
+        this.idManager = idManager;
+        this.organisme=organisme;
+    }
 
     public String getTitre() {
         return titre;
@@ -157,6 +177,14 @@ public class Offre extends AbstractEntity {
 
     public void setOrganisme(Organisme organisme) {
         this.organisme = organisme;
+    }
+
+    public Set<Candidature> getCandidatures() {
+        return candidatures;
+    }
+
+    public void setCandidatures(Set<Candidature> candidatures) {
+        this.candidatures = candidatures;
     }
 
     @Override

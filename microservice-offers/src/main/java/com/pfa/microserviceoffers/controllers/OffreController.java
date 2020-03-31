@@ -1,20 +1,22 @@
 package com.pfa.microserviceoffers.controllers;
 
+import com.pfa.microserviceoffers.exceptions.BadRequestException;
 import com.pfa.microserviceoffers.exceptions.ResourceNotFoundException;
 import com.pfa.microserviceoffers.models.Offre;
+import com.pfa.microserviceoffers.models.enumuration.Niveau;
+import com.pfa.microserviceoffers.models.enumuration.TypeOffre;
 import com.pfa.microserviceoffers.proxies.UsersProxy;
 import com.pfa.microserviceoffers.proxies.beans.UserBean;
 import com.pfa.microserviceoffers.repositories.OrganismeRepository;
-import com.pfa.microserviceoffers.responses.ApiResponse;
 import com.pfa.microserviceoffers.services.OffreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -31,23 +33,21 @@ public class OffreController {
     private UsersProxy usersProxy;
 
     @PostMapping("/add/{idManager}/organisme/{nomOrganisme}")
-    public ResponseEntity<?> create(@PathVariable(value = "idManager") Long idManager,
+    public Offre create(@PathVariable(value = "idManager") Long idManager,
                                     @PathVariable(value = "nomOrganisme") String nomOrganisme,
                                     @Valid @RequestBody Offre offre)
     {
-        UserBean userBean=this.usersProxy.findById(idManager);
+        UserBean userBean=this.usersProxy.findManagerById(idManager);
         if(userBean==null)
         {
-            throw new ResourceNotFoundException("L'utilisateur avec id :"+idManager+" n'existe pas, tu ne peux pas ajouter cette offre!!");
+            throw new ResourceNotFoundException("Le manager avec id :"+idManager+" n'existe pas, tu ne peux pas ajouter cette offre!!");
         }
         offre.setIdManager(idManager);
-        organismeRepository.findByNomOrganismeIgnoreCase(nomOrganisme).map(organisme->{
+        return organismeRepository.findByNomOrganismeIgnoreCase(nomOrganisme).map(organisme->{
             System.out.println(organisme);
             offre.setOrganisme(organisme);
-            this.offreService.save(offre);
-            return organisme;
+            return this.offreService.save(offre);
         }).orElseThrow(()-> new ResourceNotFoundException("Organisme : "+nomOrganisme+" n'existe pas, tu ne peux pas ajouter cette offre!!"));
-        return new ResponseEntity<Object>(new ApiResponse("Votre offre a été ajoutée avec succès.",true),HttpStatus.CREATED);
     }
     @GetMapping("/getOffreById/{idOffre}")
     public Offre getOffreByID(@PathVariable(value = "idOffre") Long id)
@@ -72,7 +72,7 @@ public class OffreController {
     @GetMapping("/getAll/{idManager}")
     public List<Offre> getAllOffresByManager(@PathVariable(value = "idManager") Long id)
     {
-        UserBean userBean=this.usersProxy.findById(id);
+        UserBean userBean=this.usersProxy.findManagerById(id);
         if(userBean==null)
         {
             throw new ResourceNotFoundException("L'utilisateur avec id :"+id+" n'existe pas, tu ne peux pas ajouter cette offre!!");
@@ -105,4 +105,74 @@ public class OffreController {
         }).orElseThrow(()-> new ResourceNotFoundException("Cette offre "+id+" n'existe pas !"));
     }
 
+    @GetMapping("/getAllByOrganisme/{nomOrganisme}")
+    List<Offre> getByOrganismeNomOrganismeContainingIgnoreCase(@PathVariable(value = "nomOrganisme") String nomOrganisme)
+    {
+        return this.offreService.findByOrganismeNomOrganismeContainingIgnoreCase(nomOrganisme);
+    }
+
+    @GetMapping("/getAllBySecteurOrganisme/{secteur}")
+    List<Offre> getByOrganismeSecteurContainingIgnoreCase(@PathVariable(value = "secteur") String secteur)
+    {
+        return this.offreService.findByOrganismeSecteurContainingIgnoreCase(secteur);
+    }
+    @GetMapping("/getAllByTitre/{titre}")
+    List<Offre> getAllByTitre(@PathVariable(value = "titre")String titre){
+        return this.offreService.findAllByTitreContainingIgnoreCase(titre);
+    }
+    @GetMapping("/getAllByPoste/{poste}")
+    List<Offre> findAllByPoste(@PathVariable(value = "poste")String poste){
+        return this.offreService.findAllByPosteContainingIgnoreCase(poste);
+    }
+    @GetMapping("/getAllByLieu/{lieu}")
+    List<Offre> getAllByLieu(@PathVariable(value = "lieu")String lieu){
+        return this.offreService.findAllByLieuContainingIgnoreCase(lieu);
+    }
+    @GetMapping("/getAllByTypeOffre/{type}")
+    List<Offre> getAllByTypeOffre(@PathVariable(value = "type") TypeOffre type){
+        return this.offreService.findAllByTypeOffreContainingIgnoreCase(type);
+    }
+    @GetMapping("/getAllByNiveau/{niveau}")
+    List<Offre> getAllByNiveau(@PathVariable(value = "niveau") Niveau niveau){
+        return this.offreService.findAllByNiveauContainingIgnoreCase(niveau);
+    }
+    @GetMapping("/getAllByDescription/{description}")
+    List<Offre> getAllByDescription(@PathVariable(value = "description") String description){
+        return this.offreService.findAllByDescriptionContainingIgnoreCase(description);
+    }
+    @GetMapping("/getAllByDateOffre/{date}")
+    List<Offre> getAllByDateOffre(@PathVariable(value = "date") String date){
+        try {
+            return this.offreService.findAllByDateOffre(date);
+        } catch (ParseException e) {
+            throw new BadRequestException("Requête rejeté, vérifie la date!");
+        }
+    }
+
+    @GetMapping("/getAllByDateFin/{date}")
+    List<Offre> getAllByDateFin(@PathVariable(value = "date") String date){
+        try {
+            return this.offreService.findAllByDateFin(date);
+        } catch (ParseException e) {
+            throw new BadRequestException("Requête rejeté, vérifie la date!");
+        }
+    }
+
+    @GetMapping("/getAllByDateFin/{date1}/{date2}")
+    List<Offre> getAllByDateOffreBetween(@PathVariable(value = "date1") String date1,
+                                         @PathVariable(value = "date2") String date2){
+        try {
+            return this.offreService.findAllByDateOffreBetween(date1,date2);
+        } catch (ParseException e) {
+            throw new BadRequestException("Requête rejeté, vérifie les dates!");
+        }
+    }
+    @GetMapping("/getAllByDateFin/{date}")
+    List<Offre> getAllOffresNotEnded(@PathVariable(value = "date") String dateFin){
+        try {
+            return this.offreService.findAllOffresNotEnded(dateFin);
+        } catch (ParseException e) {
+            throw new BadRequestException("Requête rejeté, vérifie la date!");
+        }
+    }
 }

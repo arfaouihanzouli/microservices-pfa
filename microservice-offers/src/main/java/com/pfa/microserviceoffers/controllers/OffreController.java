@@ -2,11 +2,13 @@ package com.pfa.microserviceoffers.controllers;
 
 import com.pfa.microserviceoffers.exceptions.BadRequestException;
 import com.pfa.microserviceoffers.exceptions.ResourceNotFoundException;
+import com.pfa.microserviceoffers.models.Competence;
 import com.pfa.microserviceoffers.models.Offre;
 import com.pfa.microserviceoffers.models.enumuration.Niveau;
 import com.pfa.microserviceoffers.models.enumuration.TypeOffre;
 import com.pfa.microserviceoffers.proxies.UsersProxy;
 import com.pfa.microserviceoffers.proxies.beans.UserBean;
+import com.pfa.microserviceoffers.repositories.CompetenceRepository;
 import com.pfa.microserviceoffers.repositories.OrganismeRepository;
 import com.pfa.microserviceoffers.services.OffreService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.text.ParseException;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @RestController
@@ -33,11 +34,13 @@ public class OffreController {
     private OrganismeRepository organismeRepository;
 
     @Autowired
+    private CompetenceRepository competenceRepository;
+
+    @Autowired
     private UsersProxy usersProxy;
 
-    @PostMapping("/add/{idManager}/organisme/{nomOrganisme}")
+    @PostMapping("/add/{idManager}")
     public Offre create(@PathVariable(value = "idManager") Long idManager,
-                                    @PathVariable(value = "nomOrganisme") String nomOrganisme,
                                     @Valid @RequestBody Offre offre)
     {
         UserBean userBean=this.usersProxy.findManagerById(idManager);
@@ -46,11 +49,23 @@ public class OffreController {
             throw new ResourceNotFoundException("Le manager avec id :"+idManager+" n'existe pas, tu ne peux pas ajouter cette offre!!");
         }
         offre.setIdManager(idManager);
-        return organismeRepository.findByNomOrganismeIgnoreCase(nomOrganisme).map(organisme->{
-            System.out.println(organisme);
+        return organismeRepository.findByNomOrganismeIgnoreCase(offre.getOrganisme().getNomOrganisme()).map(organisme->{
+            //System.out.println(organisme);
+            HashSet<Competence> competences=new HashSet<>();
+            for (Competence c: offre.getCompetences()) {
+                Competence competence=this.competenceRepository.findByTitreIgnoreCase(c.getTitre());
+                if(competence==null){
+                    competences.add(this.competenceRepository.save(c));
+                }
+                else{
+                    competences.add(competence);
+                }
+            }
+            offre.setEtat(true);
+            offre.setCompetences(competences);
             offre.setOrganisme(organisme);
             return this.offreService.save(offre);
-        }).orElseThrow(()-> new ResourceNotFoundException("Organisme : "+nomOrganisme+" n'existe pas, tu ne peux pas ajouter cette offre!!"));
+        }).orElseThrow(()-> new ResourceNotFoundException("Organisme : "+offre.getOrganisme().getNomOrganisme()+" n'existe pas, tu ne peux pas ajouter cette offre!!"));
     }
     @GetMapping("/getOffreById/{idOffre}")
     public Offre getOffreByID(@PathVariable(value = "idOffre") Long id)

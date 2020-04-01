@@ -45,7 +45,7 @@ public class CandidatureController {
         Candidature candidature1=this.candidatureRepository.findByIdCandidatAndOffreId(idCandidat,idOffre);
         if(candidature1!=null)
         {
-            throw new ResourceExistsException("Tu a déjà postulé sur cette offre : "+idOffre);
+            throw new ResourceExistsException("Tu as déjà postulé sur cette offre : "+idOffre);
         }
         candidature.setIdCandidat(idCandidat);
         candidature.setIdCv(idCv);
@@ -84,7 +84,7 @@ public class CandidatureController {
     {
         return this.candidatureRepository.findByIdAndIdCandidat(idCandidature,idCandidat).map((candidature -> {
             this.candidatureRepository.delete(candidature);
-            return new ResponseEntity<Object>(new ApiResponse("La candidature ",true), HttpStatus.OK);
+            return new ResponseEntity<Object>(new ApiResponse("La candidature a été supprimée",true), HttpStatus.OK);
         })).orElseThrow(() -> new BadRequestException("Tu n'as pas cette candidature : "+idCandidature));
     }
 }

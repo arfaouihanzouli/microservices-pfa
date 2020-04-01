@@ -7,8 +7,6 @@ import com.pfa.microserviceoffers.models.enumuration.TypeOffre;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 
@@ -36,6 +34,4 @@ public interface OffreRepository extends JpaRepository<Offre,Long> {
     List<Offre> findAllByDateFinBefore(LocalDateTime date);
     List<Offre> findAllByDateFinAfter(LocalDateTime date);
     List<Offre> findAllByDateOffreBetween(LocalDateTime date1, LocalDateTime date2);
-    @Query("select o from Offre o where o.dateFin > :now")
-    List<Offre> findAllOffresEnded(@Param("now") LocalDateTime now);
 }

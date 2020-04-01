@@ -11,12 +11,19 @@ public class CustomErrorDecoder  implements ErrorDecoder {
 
     @Override
     public Exception decode(String invoqueur, Response response) {
-        if(response.status()==404)
+
+        Gson gson= new Gson();
+        JsonObject jsonObject=gson.fromJson(response.body().toString(),JsonObject.class);
+        String message=jsonObject.get("message").toString().substring(1,jsonObject.get("message").toString().length()-1);
+
+        if(response.status()==400)
         {
-            Gson gson= new Gson();
-            JsonObject jsonObject=gson.fromJson(response.body().toString(),JsonObject.class);
-            return new UserBadRequestException(jsonObject.get("message").toString().substring(1,jsonObject.get("message").toString().length()-1));
+            return new UserBadRequestException(message);
         }
+        else if (response.status() == 404 ) {
+            return new ResourceNotFoundException(message);
+        }
+
         return errorDecoder.decode(invoqueur,response);
     }
 }

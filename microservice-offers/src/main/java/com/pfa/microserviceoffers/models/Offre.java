@@ -3,9 +3,7 @@ package com.pfa.microserviceoffers.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.pfa.microserviceoffers.models.audit.AbstractEntity;
 import com.pfa.microserviceoffers.models.enumuration.Niveau;
@@ -14,9 +12,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -205,10 +201,6 @@ public class Offre extends AbstractEntity {
 
     public void setOrganisme(Organisme organisme) {
         this.organisme = organisme;
-    }
-
-    public Set<Candidature> getCandidatures() {
-        return candidatures;
     }
 
     public void setCandidatures(Set<Candidature> candidatures) {

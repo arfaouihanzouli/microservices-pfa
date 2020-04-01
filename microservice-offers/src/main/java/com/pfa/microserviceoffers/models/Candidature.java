@@ -82,6 +82,10 @@ public class Candidature extends AbstractEntity {
         this.idCv = idCv;
     }
 
+    public Offre getOffre() {
+        return offre;
+    }
+
     public void setOffre(Offre offre) {
         this.offre = offre;
     }

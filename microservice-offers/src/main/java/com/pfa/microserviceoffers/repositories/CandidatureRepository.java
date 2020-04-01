@@ -6,11 +6,13 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CandidatureRepository extends JpaRepository<Candidature, Long> {
 
     Candidature findByIdCandidatAndOffreId(Long idCandidat, Long idOffre);
+    Optional<Candidature> findByIdAndIdCandidat(Long id, Long idCandidat);
     List<Candidature> findByIdCandidat(Long idCandidat);
     List<Candidature> findByOffreId(Long idOffre);
     List<Candidature> findByIdCv(Long idCandidat);

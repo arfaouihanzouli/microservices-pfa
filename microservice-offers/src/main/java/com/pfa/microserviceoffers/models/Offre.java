@@ -75,11 +75,19 @@ public class Offre extends AbstractEntity {
                 mappedBy = "offre")
     private Set<Candidature> candidatures=new HashSet<>();
 
+    @ManyToMany
+    @JoinTable(name = "competences_offres",
+                joinColumns = @JoinColumn(name = "offre_id"),
+                inverseJoinColumns = @JoinColumn(name = "competence_id"))
+    private Set<Competence> competences=new HashSet<>();
+
+
     public Offre() {
         super();
     }
 
-    public Offre(String titre, LocalDateTime dateOffre, LocalDateTime dateFin, String poste, String lieu, TypeOffre typeOffre, String description, int anneeExperience, Niveau niveauDemande, boolean etat, Long idManager, Organisme organisme) {
+
+    public Offre(String titre, LocalDateTime dateOffre, LocalDateTime dateFin, String poste, String lieu, TypeOffre typeOffre, String description, int anneeExperience, Niveau niveauDemande, boolean etat, Long idManager, Organisme organisme,HashSet competences) {
         super();
         this.titre = titre;
         this.dateOffre = dateOffre;
@@ -93,6 +101,14 @@ public class Offre extends AbstractEntity {
         this.etat = etat;
         this.idManager = idManager;
         this.organisme=organisme;
+        this.competences=competences;
+    }
+    public Set<Competence> getCompetences() {
+        return competences;
+    }
+
+    public void setCompetences(Set<Competence> competences) {
+        this.competences = competences;
     }
 
     public String getTitre() {

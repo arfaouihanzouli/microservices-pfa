@@ -7,7 +7,6 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.util.Date;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -17,7 +16,7 @@ public class Candidature extends AbstractEntity {
     private String commentaire;
 
     @Column
-    private boolean etat;
+    private boolean etat=true;
 
     @Column
     private Long idCandidat;
@@ -26,7 +25,7 @@ public class Candidature extends AbstractEntity {
     private Long idCv;
 
     @Column
-    private Date dateCandidature;
+    private Instant dateCandidature=Instant.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -43,11 +42,11 @@ public class Candidature extends AbstractEntity {
         this.idCv = idCv;
         this.offre = offre;
     }
-    public Date getDateCandidature() {
+    public Instant getDateCandidature() {
         return dateCandidature;
     }
 
-    public void setDateCandidature(Date dateCandidature) {
+    public void setDateCandidature(Instant dateCandidature) {
         this.dateCandidature = dateCandidature;
     }
 
@@ -81,14 +80,6 @@ public class Candidature extends AbstractEntity {
 
     public void setIdCv(Long idCv) {
         this.idCv = idCv;
-    }
-
-    public Offre getOffre() {
-        return offre;
-    }
-
-    public void setOffre(Offre offre) {
-        this.offre = offre;
     }
 
     @Override

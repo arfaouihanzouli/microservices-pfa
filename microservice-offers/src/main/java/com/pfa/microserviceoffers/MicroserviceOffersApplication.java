@@ -1,9 +1,11 @@
 package com.pfa.microserviceoffers;
 
+import com.pfa.microserviceoffers.models.Competence;
 import com.pfa.microserviceoffers.models.Offre;
 import com.pfa.microserviceoffers.models.Organisme;
 import com.pfa.microserviceoffers.models.enumuration.Niveau;
 import com.pfa.microserviceoffers.models.enumuration.TypeOffre;
+import com.pfa.microserviceoffers.repositories.CompetenceRepository;
 import com.pfa.microserviceoffers.repositories.OffreRepository;
 import com.pfa.microserviceoffers.repositories.OrganismeRepository;
 import org.apache.catalina.connector.Connector;
@@ -25,7 +27,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.TimeZone;
 
 @SpringBootApplication
@@ -39,6 +43,9 @@ public class MicroserviceOffersApplication implements CommandLineRunner {
 
 	@Autowired
 	private OrganismeRepository organismeRepository;
+
+	@Autowired
+	private CompetenceRepository competenceRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(MicroserviceOffersApplication.class, args);
@@ -62,39 +69,64 @@ public class MicroserviceOffersApplication implements CommandLineRunner {
 		Organisme o2=organismeRepository.save(new Organisme("Mind Engineering","Software engineering"));
 		Organisme o3=organismeRepository.save(new Organisme("Sofrecom","Devops"));
 
-		SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		//simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+2"));
+		Competence java=this.competenceRepository.save(new Competence("Java"));
+		Competence angular=this.competenceRepository.save(new Competence("Angular"));
+		Competence web=this.competenceRepository.save(new Competence("FullStack"));
+		Competence design=this.competenceRepository.save(new Competence("Adobe Creator"));
+		Competence conception=this.competenceRepository.save(new Competence("Conception UML"));
+		Competence scrum=this.competenceRepository.save(new Competence("Scrum"));
+		Competence git=this.competenceRepository.save(new Competence("Version de control GIT"));
+
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+
+		HashSet hashSet=new HashSet();
+		hashSet.add(git);
+		hashSet.add(java);
+		hashSet.add(scrum);
+		hashSet.add(conception);
+		System.out.println(hashSet.size());
 		Offre of1=new Offre("Développeur JAVA H/F",
 				LocalDateTime.parse("2020-03-31 14:25:15",formatter),
 				LocalDateTime.parse("2020-07-04 14:25:15",formatter)
 				,"Développeur JAVA","Tunis", TypeOffre.CDD,
 				"Cette offre nécessite l'expérience en JAVA",2, Niveau.Licence,
-				true, (long) 2,o1);
+				true, (long) 2,o1, hashSet);
+		this.offreRepository.save(of1);
 
+
+		hashSet.remove(java);
+		hashSet.add(angular);
+		System.out.println(hashSet.size());
 		Offre of2=new Offre("Développeur Angular 5 H/F",
 				LocalDateTime.parse("2020-03-30 14:25:15",formatter),
 				LocalDateTime.now()
 				,"Développeur Angular","Ariana", TypeOffre.TempsPartiel,
 				"Cette offre nécessite l'expérience en Angular",1, Niveau.Mastere,
-				true, (long) 2,o2);
+				true, (long) 2,o2, hashSet);
+		this.offreRepository.save(of2);
 
+
+		hashSet.add(java);
+		hashSet.add(web);
 		Offre of3=new Offre("Développeur Fullstack H/F",
 				LocalDateTime.parse("2020-04-10 14:25:15",formatter),
 				LocalDateTime.parse("2020-05-21 14:25:15",formatter)
 				,"Développeur Fullstack Spring boot et Angular 5+","Mannouba", TypeOffre.TempsPlein,
 				"Cette offre nécessite l'expérience en JAVA Spring boot et Angular",4, Niveau.Ingenieur,
-				true, (long) 2,o3);
+				true, (long) 2,o3,hashSet);
+		this.offreRepository.save(of3);
 
+
+		hashSet.clear();
+		hashSet.add(design);
+		System.out.println(hashSet.size());
 		Offre of4=new Offre("Designer H/F",
 				LocalDateTime.parse("2020-04-15 14:25:15",formatter),
 				LocalDateTime.parse("2020-04-29 14:25:15",formatter)
 				,"Web and mobile Designer","Ben Arous", TypeOffre.TravailTemporaire,
 				"Cette offre nécessite l'expérience en Photoshop et Adobe ...",3, Niveau.Autre,
-				true, (long) 2,o1);
-		this.offreRepository.save(of1);
-		this.offreRepository.save(of2);
-		this.offreRepository.save(of3);
+				true, (long) 2,o1, hashSet);
 		this.offreRepository.save(of4);
 	}
 }

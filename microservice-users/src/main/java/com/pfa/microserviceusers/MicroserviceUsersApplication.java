@@ -38,7 +38,8 @@ public class MicroserviceUsersApplication implements CommandLineRunner {
 		userService.saveUser(new User("admin","1234","adminadmin@gmail.com",RoleName.ADMIN));
 		userService.saveUser(new Manager("nourd","1234","noureddine0arfaoui@gmail.com",RoleName.MANAGER,"Mind Engineering"));
 		userService.saveUser(new Candidat("yooo","1234","yoyoyoyoyyo@gmail.com",RoleName.CANDIDAT));
-		userService.saveUser(new Manager("marween","1234","noureddineou@gmail.com",RoleName.MANAGER,"Mind Engineering"));
+		userService.saveUser(new Candidat("aymen","1234","aymeen@gmail.com",RoleName.CANDIDAT));
+		userService.saveUser(new Manager("marween","1234","noureddineou@gmail.com",RoleName.MANAGER,"Poulina"));
 //		userService.addRoleToUser("marwen",RoleName.USER);
 //		userService.addRoleToUser("admin",RoleName.ADMIN);
 //		userService.addRoleToUser("nourd",RoleName.MANAGER);

@@ -1,5 +1,6 @@
 package com.pfa.microserviceusers.controller;
 
+import com.pfa.microserviceusers.exceptions.BadRequestException;
 import com.pfa.microserviceusers.exceptions.ResourceNotFoundException;
 import com.pfa.microserviceusers.models.Manager;
 import com.pfa.microserviceusers.models.User;
@@ -27,13 +28,13 @@ public class ManagerController {
             m.setLoacked(manager.isLoacked());
             m.setNameEntreprise(manager.getNameEntreprise());
             return managerRepository.save(m);
-        }).orElseThrow(()-> new ResourceNotFoundException("Ce manager n'existe pas!!!"));
+        }).orElseThrow(()-> new BadRequestException("Ce manager n'existe pas!!!"));
     }
 
     @GetMapping("/findById/{id}")
     public Manager findById(@Valid @PathVariable Long id)
     {
         return this.managerRepository.findById(id)
-                .orElseThrow(()->new ResourceNotFoundException("Ce manager : "+id+" n'existe pas"));
+                .orElseThrow(()->new BadRequestException("Ce manager : "+id+" n'existe pas"));
     }
 }

@@ -1,5 +1,6 @@
 package com.pfa.microserviceusers.controller;
 
+import com.pfa.microserviceusers.exceptions.BadRequestException;
 import com.pfa.microserviceusers.exceptions.ResourceNotFoundException;
 import com.pfa.microserviceusers.models.User;
 import com.pfa.microserviceusers.models.token.PasswordRestToken;
@@ -55,7 +56,7 @@ public class ResetPasswordController {
         User user=userService.findByEmail(resetPasswordRequest.getEmail());
         if(user==null)
         {
-            throw new ResourceNotFoundException("This user not exists");
+            throw new BadRequestException("This user not exists");
         }
         String password=resetPasswordRequest.getNewPassword();
         String repassword=resetPasswordRequest.getConfirmNewPassword();

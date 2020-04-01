@@ -1,5 +1,6 @@
 package com.pfa.microserviceusers.controller;
 
+import com.pfa.microserviceusers.exceptions.BadRequestException;
 import com.pfa.microserviceusers.exceptions.ResourceNotFoundException;
 import com.pfa.microserviceusers.models.Candidat;
 import com.pfa.microserviceusers.models.Manager;
@@ -31,12 +32,12 @@ public class CandidatController {
             c.setDiplome(candidat.getDiplome());
             c.setAddress(candidat.getAddress());
             return candidatRepository.save(c);
-        }).orElseThrow(()-> new ResourceNotFoundException("Ce candidat n'existe pas!!!"));
+        }).orElseThrow(()-> new BadRequestException("Ce candidat n'existe pas!!!"));
     }
     @GetMapping("/findById/{id}")
     public Candidat findById(@Valid @PathVariable Long id)
     {
         return this.candidatRepository.findById(id)
-                .orElseThrow(()->new ResourceNotFoundException("Ce manager : "+id+" n'existe pas"));
+                .orElseThrow(()->new BadRequestException("Ce candidat : "+id+" n'existe pas"));
     }
 }

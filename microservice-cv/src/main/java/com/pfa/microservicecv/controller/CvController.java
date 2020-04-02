@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.pfa.microservicecv.beans.CandidatBean;
+import com.pfa.microservicecv.exceptions.BadRequestException;
 import com.pfa.microservicecv.exceptions.ResourceNotFoundException;
 import com.pfa.microservicecv.models.Cv;
 import com.pfa.microservicecv.models.Fichier;
@@ -16,8 +17,6 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.http.*;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +26,7 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/cvs")
@@ -85,7 +85,26 @@ public class CvController {
             throw new ResourceNotFoundException("Le parsing de fichier est échoué");
         }
     }
-
+    @GetMapping("/getOne/{id}")
+    public Cv getOne(@PathVariable(value = "id") Long id)
+    {
+        Optional<Cv> cv=this.cvService.findById(id);
+        if(!cv.isPresent())
+        {
+            throw new BadRequestException("Ce CV : "+id+" n'existe pas");
+        }
+        return cv.get();
+    }
+    @DeleteMapping("/delete/{idCandidat}/{id}")
+    public ResponseEntity<?> deleteCv(@PathVariable(value = "idCandidat") Long idCandidat,
+                                      @PathVariable(value = "id") Long id)
+    {
+        CandidatBean candidatBean=this.candidatProxy.findCandidatById(idCandidat);
+        return this.cvService.findById(id).map(cv -> {
+            this.cvService.delete(cv);
+            return ResponseEntity.ok().build();
+        }).orElseThrow(() -> new BadRequestException("Ce CV : "+id+" n'existe pas!!"));
+    }
     @GetMapping("/getAll")
     public List<Cv> getAll()
     {

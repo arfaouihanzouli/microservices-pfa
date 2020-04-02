@@ -23,9 +23,9 @@ public interface CvRepository  extends ElasticsearchRepository<Cv, Long> {
     Page<Cv> findByEtat(boolean etat, Pageable pageable);
     List<Cv> findByEtat(boolean etat);
 
-    @Query("{\"bool\": {\"must\": [{\"match\": {\"cvParser\": \"?0\"}}]}}")
+    @Query("{\"bool\": {\"should\": [{\"match\": {\"cvParser\": \"?0\"}}]}}")
     Page<Cv> findByCvParserUsingCustomQuery(String tag,Pageable pageable);
 
-    @Query("{\"bool\": {\"must\": [{\"match\": {\"cvParser\": \"?0\"}}]}}")
+    @Query("{\"bool\": {\"should\": [{\"match\": {\"cvParser\": \"?0\"}}]}}")
     List<Cv> findByCvParserUsingCustomQuery(String tag);
 }

@@ -1,28 +1,32 @@
 package com.pfa.microservicecv.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.pfa.microservicecv.beans.CandidatBean;
 import com.pfa.microservicecv.exceptions.ResourceNotFoundException;
 import com.pfa.microservicecv.models.Cv;
 import com.pfa.microservicecv.models.Fichier;
 import com.pfa.microservicecv.proxy.CandidatProxy;
 import com.pfa.microservicecv.service.CvService;
+import com.pfa.microservicecv.service.FileUploadService;
+import org.elasticsearch.common.unit.Fuzziness;
+import org.elasticsearch.index.query.Operator;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.http.*;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.Base64;
+import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/cvs")
@@ -34,10 +38,8 @@ public class CvController {
     @Autowired
     private CandidatProxy candidatProxy;
 
-
-    RestTemplate restTemplate=new RestTemplate();
-    HttpHeaders headers = new HttpHeaders();
-    HttpEntity<String> entity;
+    @Autowired
+    private FileUploadService fileUploadService;
 
     @PostMapping(value = "/add/{idCandidat}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Cv create(@PathVariable(value = "idCandidat") Long id,
@@ -60,31 +62,60 @@ public class CvController {
         cvObject.setFichier(fichier);
         cvObject.setIdCandidat(id);
         //parser
-        headers.setAccept(Arrays.asList(MediaType.MULTIPART_FORM_DATA,MediaType.APPLICATION_PDF,MediaType.IMAGE_JPEG,MediaType.IMAGE_PNG));
-        headers.set("apikey","dab475022388957");
-        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        //body.add("filename", fileName);
-        OutputStream out = new FileOutputStream(fileName);
-        out.write(fileContent);
-        out.close();
-        body.add("file",out);
-        //body.add("apikey","dab475022388957");
-        body.add("isOverlayRequired",false);
-        body.add("language","fre");
-
-        entity= new HttpEntity<String>(body.toString(),headers);
-        ResponseEntity responseEntity=restTemplate.exchange("https://api.ocr.space/parse/image", HttpMethod.POST, entity, String.class);
-        String parse=responseEntity.getBody().toString();
-        int status=responseEntity.getStatusCodeValue();
+        ResponseEntity entity= this.fileUploadService.postFile(fileName,fileContent);
+        String parse=entity.getBody().toString();
+        int status=entity.getStatusCodeValue();
         if(status==200)
         {
-            System.out.println(parse);
-            cvObject.setCvParser(parse);
+            //System.out.println(parse);
+            Gson gson= new Gson();
+            JsonObject jsonObject=gson.fromJson(parse,JsonObject.class);
+            String detailsCv=jsonObject.get("ParsedResults").getAsJsonArray().get(0).getAsJsonObject().get("ParsedText").toString();
+            //System.out.println(detailsCv.split("\\n").length);
+            cvObject.setCvParser(detailsCv.substring(1,detailsCv.length()-1));
+            Date date=new Date();
+            Long idd= date.getTime();
+            System.out.println(idd);
+            //System.out.println(uuid.timestamp());
+            cvObject.setId(idd);
             return this.cvService.create(cvObject);
         }
         else
         {
             throw new ResourceNotFoundException("Le parsing de fichier est échoué");
         }
+    }
+
+    @GetMapping("/getAll")
+    public List<Cv> getAll()
+    {
+        return this.cvService.findAll();
+    }
+
+    @GetMapping("/getAllPaginate")
+    public Page<Cv> getAll(Pageable pageable)
+    {
+        return this.cvService.findAll(pageable);
+    }
+
+    @GetMapping("/getByCandidat/{idCandidat}")
+    public List<Cv> getAllByCandidat(@PathVariable(value = "idCandidat") Long id)
+    {
+        return this.cvService.findByIdCandidat(id);
+    }
+    @GetMapping("/getByCandidatPaginate/{idCandidat}")
+    public Page<Cv> getAllByCandidat(@PathVariable(value = "idCandidat") Long id, Pageable pageable)
+    {
+        return this.cvService.findByIdCandidat(id,pageable);
+    }
+    @GetMapping("/getByTag/{tag}")
+    public List<Cv> getAllByTag(@PathVariable(value = "tag") String tag)
+    {
+        return this.cvService.findByCvParserUsingCustomQuery(tag);
+    }
+    @GetMapping("/getByTagPaginate/{tag}")
+    public Page<Cv> getAllByTag(@PathVariable(value = "tag") String tag, Pageable pageable)
+    {
+        return this.cvService.findByCvParserUsingCustomQuery(tag,pageable);
     }
 }

@@ -10,6 +10,8 @@ import java.util.Optional;
 public interface CvService {
 
     Optional<Cv> findById(Long id);
+    List<Cv> findAll();
+    Page<Cv> findAll(Pageable pageable);
 
     Page<Cv> findByIdCandidat(Long id, Pageable pageable);
     List<Cv> findByIdCandidat(Long id);

@@ -1,13 +1,19 @@
 package com.pfa.microservicecv.models;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import org.elasticsearch.search.DocValueFormat;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.InnerField;
 
 import java.time.LocalDateTime;
 
-@Document(indexName = "cvs", type = "cv")
+@Document(indexName = "microservice-cvs")
 public class Cv {
 
     @Id
@@ -18,6 +24,8 @@ public class Cv {
     @Field(type = FieldType.Nested, includeInParent = true)
     private Fichier fichier;
 
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime dateDepot=LocalDateTime.now();
 
     private boolean etat;

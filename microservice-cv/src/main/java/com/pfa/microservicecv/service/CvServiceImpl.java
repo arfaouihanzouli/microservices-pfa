@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +22,20 @@ public class CvServiceImpl implements CvService{
     @Override
     public Optional<Cv> findById(Long id) {
         return cvRepository.findById(id);
+    }
+
+    @Override
+    public List<Cv> findAll() {
+        List<Cv> l= new ArrayList<Cv>();
+        this.cvRepository.findAll().forEach(cv -> {
+            l.add(cv);
+        });
+        return l;
+    }
+
+    @Override
+    public Page<Cv> findAll(Pageable pageable) {
+        return this.cvRepository.findAll(pageable);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.pfa.microserviceusers.controller;
 
+import com.pfa.microserviceusers.exceptions.BadRequestException;
 import com.pfa.microserviceusers.exceptions.ResourceNotFoundException;
 import com.pfa.microserviceusers.models.*;
 import com.pfa.microserviceusers.models.embedded.*;
@@ -38,7 +39,7 @@ public class UserController {
         User user=userService.findByUsernameOrEmail(username,email);
         if(user!=null)
         {
-            throw new ResourceNotFoundException("This user already exists, Try with another user");
+            throw new BadRequestException("This user already exists, Try with another user");
         }
         String password=data.getPassword();
         String repassword=data.getRepassword();
@@ -80,7 +81,7 @@ public class UserController {
             emailSenderService.sendConfirmationEmail(manager);
             return manager;
         }
-        throw new ResourceNotFoundException("User not registred!! Check your form of registration!");
+        throw new BadRequestException("User not registred!! Check your form of registration!");
     }
 
     @RequestMapping(method = RequestMethod.PUT,value = "/addPhoto/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -99,7 +100,7 @@ public class UserController {
             String encodedString = Base64.getEncoder().encodeToString(fileContent);
             Photo photo=new Photo(fileName,type,encodedString);
             return userService.addPhotoToUser(u,photo);
-        }).orElseThrow(()-> new ResourceNotFoundException("This user does not exist!"));
+        }).orElseThrow(()-> new BadRequestException("This user does not exist!"));
 
     }
     @GetMapping("/findByUsername/{username}")
@@ -108,7 +109,7 @@ public class UserController {
         User user=userService.findByUsername(username);
         if(user==null)
         {
-            throw new ResourceNotFoundException("This user not exists, Try with another user");
+            throw new BadRequestException("This user not exists, Try with another user");
         }
         return user;
     }
@@ -119,7 +120,7 @@ public class UserController {
         String encodedStringOfImage=userService.encodedStringOfImage(id);
         if(encodedStringOfImage==null)
         {
-            throw new ResourceNotFoundException("This user not exists, Try with another user");
+            throw new BadRequestException("This user not exists, Try with another user");
         }
         return encodedStringOfImage;
     }
@@ -130,7 +131,7 @@ public class UserController {
         User user=userService.findByUsernameOrEmail(usernameOrEmail,usernameOrEmail);
         if(user==null)
         {
-            throw new ResourceNotFoundException("This user not exists, Try with another user");
+            throw new BadRequestException("This user not exists, Try with another user");
         }
         return user;
     }
@@ -138,7 +139,7 @@ public class UserController {
     public User findById(@Valid @PathVariable Long id)
     {
         return userService.findById(id)
-                .orElseThrow(()->new ResourceNotFoundException("This user not exists, Try with another user"));
+                .orElseThrow(()->new BadRequestException("This user not exists, Try with another user"));
     }
 
     @GetMapping("/findAllUsers")
@@ -153,7 +154,7 @@ public class UserController {
        return userService.findById(id).map(user->{
             userService.deleteUser(id);
             return ResponseEntity.ok().build();
-        }).orElseThrow(()-> new ResourceNotFoundException("This user not exists!"));
+        }).orElseThrow(()-> new BadRequestException("This user not exists!"));
     }
 
     @PutMapping("/update/{id}")
@@ -166,7 +167,7 @@ public class UserController {
             u.setUsername(user.getUsername());
             u.setLoacked(user.isLoacked());
             return userService.updateUser(u);
-        }).orElseThrow(()-> new ResourceNotFoundException("This user not exists!"));
+        }).orElseThrow(()-> new BadRequestException("This user not exists!"));
     }
     @PutMapping("/update-password/{id}")
     public ResponseEntity<Object> updatePassword(@RequestBody ResetPasswordRequest resetPasswordRequest, @PathVariable Long id)
@@ -179,7 +180,7 @@ public class UserController {
             u.setPassword(resetPasswordRequest.getNewPassword());
             userService.saveUser(u);
             return u;
-        }).orElseThrow(()-> new ResourceNotFoundException("This user not exists!"));
+        }).orElseThrow(()-> new BadRequestException("This user not exists!"));
         return new ResponseEntity<>(
                 new ApiResponse("Your password has been successfully changed!",true),
                 HttpStatus.OK);
@@ -191,7 +192,7 @@ public class UserController {
         User user=userService.findByEmail(email.getEmail());
         if(user==null)
         {
-            throw new RuntimeException("This user not exists");
+            throw new BadRequestException("This user not exists");
         }
         emailSenderService.sendResetPasswordEmail(user);
     }

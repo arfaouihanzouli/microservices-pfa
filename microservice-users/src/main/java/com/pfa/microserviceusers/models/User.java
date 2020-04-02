@@ -12,14 +12,14 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
 public class User extends AbstractEntity {
-    @Column
+    @Column(unique = true)
     private String username;
 
     //@JsonIgnore
     @Column
     private String password;
 
-    @Column
+    @Column(unique = true)
     private String email;
 
     @Column

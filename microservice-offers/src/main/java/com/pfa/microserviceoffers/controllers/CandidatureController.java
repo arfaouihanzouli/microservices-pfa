@@ -4,7 +4,9 @@ package com.pfa.microserviceoffers.controllers;
 import com.pfa.microserviceoffers.exceptions.BadRequestException;
 import com.pfa.microserviceoffers.exceptions.ResourceExistsException;
 import com.pfa.microserviceoffers.models.Candidature;
+import com.pfa.microserviceoffers.proxies.CvsProxy;
 import com.pfa.microserviceoffers.proxies.UsersProxy;
+import com.pfa.microserviceoffers.proxies.beans.CvBean;
 import com.pfa.microserviceoffers.proxies.beans.UserBean;
 import com.pfa.microserviceoffers.repositories.CandidatureRepository;
 import com.pfa.microserviceoffers.responses.ApiResponse;
@@ -30,6 +32,9 @@ public class CandidatureController {
     @Autowired
     private OffreService offreService;
 
+    @Autowired
+    private CvsProxy cvsProxy;
+
     @PostMapping("/add/candidat/{idCandidat}/offre/{idOffre}/cv/{idCv}")
     public Candidature create(@Valid @RequestBody Candidature candidature,
                               @PathVariable("idCandidat") Long idCandidat,
@@ -42,6 +47,7 @@ public class CandidatureController {
             throw new BadRequestException("Cette offre : "+idOffre+" n'existe pas, tu ne peux pas ajouter cette candidature");
         }
         //Il manque le test avec sur le idCv
+        CvBean cvBean=this.cvsProxy.getCv(idCv);
         Candidature candidature1=this.candidatureRepository.findByIdCandidatAndOffreId(idCandidat,idOffre);
         if(candidature1!=null)
         {

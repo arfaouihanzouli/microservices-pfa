@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.validation.Valid;
 
-@FeignClient(name = "microservice-users",url="localhost:9220", decode404 = true)
+@FeignClient(name = "zuul-server", decode404 = true)
 @RibbonClient(name = "microservice-users")
 public interface UsersProxy {
 
-    @GetMapping("/managers/findById/{id}")
+    @GetMapping("/microservice-users/managers/findById/{id}")
     UserBean findManagerById(@Valid @PathVariable Long id);
 
-    @GetMapping("/candidats/findById/{id}")
+    @GetMapping("/microservice-users/candidats/findById/{id}")
     UserBean findCandidatById(@Valid @PathVariable Long id);
 }

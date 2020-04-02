@@ -22,18 +22,18 @@ public class ConfigElastcisearch {
     public String host;
     @Value("${elasticsearch.port}")
     public int port;
-    @Value("${elasticsearch.cluster.name}")
-    private String clusterName;
+//    @Value("${elasticsearch.cluster.name}")
+//    private String clusterName;
 
     @Bean
     public Client client(){
         TransportClient client = null;
         try{
-            System.out.println("host:"+ host+"port:"+port);
-            final Settings elasticsearchSettings = Settings.builder()
-                    .put("client.transport.sniff", true)
-                    .put("cluster.name", clusterName).build();
-            client = new PreBuiltTransportClient(elasticsearchSettings)
+//            System.out.println("host:"+ host+"port:"+port);
+//            final Settings elasticsearchSettings = Settings.builder()
+//                    .put("client.transport.sniff", true)
+//                    .put("cluster.name", clusterName).build();
+            client = new PreBuiltTransportClient(Settings.EMPTY)
                     .addTransportAddress(new TransportAddress(InetAddress.getByName(host), port));
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -61,11 +61,11 @@ public class ConfigElastcisearch {
         this.port = port;
     }
 
-    public String getClusterName() {
-        return clusterName;
-    }
-
-    public void setClusterName(String clusterName) {
-        this.clusterName = clusterName;
-    }
+//    public String getClusterName() {
+//        return clusterName;
+//    }
+//
+//    public void setClusterName(String clusterName) {
+//        this.clusterName = clusterName;
+//    }
 }

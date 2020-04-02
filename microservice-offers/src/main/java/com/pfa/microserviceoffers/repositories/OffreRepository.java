@@ -34,4 +34,6 @@ public interface OffreRepository extends JpaRepository<Offre,Long> {
     List<Offre> findAllByDateFinBefore(LocalDateTime date);
     List<Offre> findAllByDateFinAfter(LocalDateTime date);
     List<Offre> findAllByDateOffreBetween(LocalDateTime date1, LocalDateTime date2);
+    Page<Offre> findAllByTitreOrDescriptionOrPosteOrLieuContainingIgnoreCase(String titre, String description, String poste, String lieu,Pageable pageable);
+    List<Offre> findAllByTitreOrDescriptionOrPosteOrLieuContainingIgnoreCase(String titre, String description, String poste, String lieu);
 }

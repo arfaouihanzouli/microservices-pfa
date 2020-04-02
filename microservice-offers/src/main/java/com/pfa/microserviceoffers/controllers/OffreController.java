@@ -97,6 +97,19 @@ public class OffreController {
         }
         return this.offreService.findByIdManager(id);
     }
+
+    @GetMapping("/getAllByTag/{tag}")
+    public List<Offre> getAllByTag(@PathVariable(value = "tag") String tag)
+    {
+        return this.offreService.findAllByTag(tag);
+    }
+    @GetMapping("/getAllByTagPaginate/{tag}")
+    public Page<Offre> getAllByTagPaginate(@PathVariable(value = "tag") String tag, Pageable pageable)
+    {
+        return this.offreService.findAllByTag(tag,pageable);
+    }
+
+
     @PutMapping("/update/{idOffre}")
     public Offre updateOffre(@PathVariable(value = "idOffre") Long idOffre,@Valid @RequestBody Offre offre)
     {

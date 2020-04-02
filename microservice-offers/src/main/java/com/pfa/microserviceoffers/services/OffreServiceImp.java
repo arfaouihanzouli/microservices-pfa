@@ -143,4 +143,14 @@ public class OffreServiceImp implements OffreService{
     public List<Offre> findAllOffresEnded() {
         return this.offreRepository.findAllByDateFinBefore(LocalDateTime.now());
     }
+
+    @Override
+    public Page<Offre> findAllByTag(String tag, Pageable pageable) {
+        return this.offreRepository.findAllByTitreOrDescriptionOrPosteOrLieuContainingIgnoreCase(tag,tag,tag,tag,pageable);
+    }
+
+    @Override
+    public List<Offre> findAllByTag(String tag) {
+        return this.offreRepository.findAllByTitreOrDescriptionOrPosteOrLieuContainingIgnoreCase(tag,tag,tag,tag);
+    }
 }

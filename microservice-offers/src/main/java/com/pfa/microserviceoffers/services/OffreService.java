@@ -37,4 +37,7 @@ public interface OffreService  {
     List<Offre> findAllOffresNotEndedBefore(String dateFin) throws DateTimeParseException;
     List<Offre> findAllOffresNotEnded();
     List<Offre> findAllOffresEnded();
+    Page<Offre> findAllByTag(String tag,Pageable pageable);
+    List<Offre> findAllByTag(String tag);
+
 }

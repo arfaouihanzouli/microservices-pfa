@@ -1,40 +1,28 @@
 package com.pfa.zuulserver.beans;
 
-import java.util.ArrayList;
-import java.util.Collection;
-public class UserBean {
+import java.io.Serializable;
+import java.util.Date;
 
+public class UserBean implements Serializable {
     private long id;
     private String username;
     private String password;
+    private String role;
     private String email;
     private String name;
     private String lastName;
-    private Integer active=1;
-    private boolean isLoacked=false;
-    private boolean isExpired=false;
-    private boolean isEnabled=true;
-    private Collection<RoleBean> roles=new ArrayList<>();
-    public UserBean( String username, String password, Collection<RoleBean> roles) {
-        this.username = username;
-        this.password = password;
-        this.roles = roles;
-    }
-
-    public UserBean() {
-
-    }
-
-    public UserBean(String username) {
-        this.username = username;
-    }
-
-    public UserBean(String username, String password, String email, String name) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.name = name;
-    }
+    private String telephone;
+    private Photo photo;
+    private Address address;
+    private String niveau;
+    private String diplome;
+    private String institut;
+    private Date date_naissance;
+    private String nameEntreprise;
+    private Integer active;
+    private boolean isLoacked;
+    private boolean isExpired;
+    private boolean isEnabled;
 
     public long getId() {
         return id;
@@ -60,13 +48,6 @@ public class UserBean {
         this.password = password;
     }
 
-    public Collection<RoleBean> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Collection<RoleBean> roles) {
-        this.roles = roles;
-    }
 
     public String getEmail() {
         return email;
@@ -90,6 +71,78 @@ public class UserBean {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public Photo getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(Photo photo) {
+        this.photo = photo;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public String getNiveau() {
+        return niveau;
+    }
+
+    public void setNiveau(String niveau) {
+        this.niveau = niveau;
+    }
+
+    public String getDiplome() {
+        return diplome;
+    }
+
+    public void setDiplome(String diplome) {
+        this.diplome = diplome;
+    }
+
+    public String getInstitut() {
+        return institut;
+    }
+
+    public void setInstitut(String institut) {
+        this.institut = institut;
+    }
+
+    public Date getDate_naissance() {
+        return date_naissance;
+    }
+
+    public void setDate_naissance(Date date_naissance) {
+        this.date_naissance = date_naissance;
+    }
+
+    public String getNameEntreprise() {
+        return nameEntreprise;
+    }
+
+    public void setNameEntreprise(String nameEntreprise) {
+        this.nameEntreprise = nameEntreprise;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public Integer getActive() {
@@ -122,5 +175,36 @@ public class UserBean {
 
     public void setEnabled(boolean enabled) {
         isEnabled = enabled;
+    }
+
+    @Override
+    public String toString() {
+        return "UserBean{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", role=" + role +
+                '}';
+    }
+    public UserWithoutPassword mapToUserWithoutPassword(){
+        UserWithoutPassword u =new UserWithoutPassword();
+        u.setId(this.getId());
+        u.setAddress(this.getAddress());
+        u.setDate_naissance(this.getDate_naissance());
+        u.setDiplome(this.getDiplome());
+        u.setInstitut(this.getInstitut());
+        u.setNiveau(this.getNiveau());
+        u.setUsername(this.getUsername());
+        u.setEmail(this.getEmail());
+        u.setName(this.getName());
+        u.setPhoto(this.getPhoto());
+        u.setLastName(this.getLastName());
+        u.setTelephone(this.getTelephone());
+        u.setRole(this.getRole());
+        u.setNameEntreprise(this.getNameEntreprise());
+        u.setActive(active);
+        u.setEnabled(isEnabled);
+        u.setExpired(isExpired);
+        u.setLoacked(this.isLoacked());
+        return u;
     }
 }

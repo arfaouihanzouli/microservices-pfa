@@ -7,14 +7,14 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@FeignClient(name = "zuul-server")
-@RibbonClient(name = "microservice-users")
+@FeignClient(name = "microservice-users")
+//@RibbonClient(name = "microservice-users")
 public interface UsersProxy {
 
-    @GetMapping("/microservice-users/users/findByUsername/{username}")
+    @GetMapping("/users/findByUsername/{username}")
     UserBean findByUsername(@Valid @PathVariable String username);
 
-    @GetMapping("/microservice-users/users/findByUsernameOrEmail/{usernameOrEmail}")
+    @GetMapping("/users/findByUsernameOrEmail/{usernameOrEmail}")
     UserBean findByUsernameOrEmail(@Valid @PathVariable String usernameOrEmail);
 
 }

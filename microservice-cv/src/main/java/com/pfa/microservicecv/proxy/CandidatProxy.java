@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import javax.validation.Valid;
 
 
-@FeignClient(name = "zuul-server", decode404 = true)
-@RibbonClient(name = "microservice-users")
+@FeignClient(name = "microservice-users", decode404 = true)
+//@RibbonClient(name = "microservice-users")
 
 public interface CandidatProxy {
 
-    @GetMapping("/microservice-users/candidats/findById/{id}")
+    @GetMapping("/candidats/findById/{id}")
     CandidatBean findCandidatById(@Valid @PathVariable Long id);
 }

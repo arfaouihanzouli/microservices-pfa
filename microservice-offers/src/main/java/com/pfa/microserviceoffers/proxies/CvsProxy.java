@@ -7,10 +7,10 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(contextId = "clientCV",name = "zuul-server", decode404 = true)
-@RibbonClient(name = "microservice-cv")
+@FeignClient(contextId = "clientCV",name = "microservice-cv", decode404 = true)
+//@RibbonClient(name = "microservice-cv")
 public interface CvsProxy {
 
-    @GetMapping("/getOne/{id}")
+    @GetMapping("/cvs/getOne/{id}")
     public CvBean getCv(@PathVariable(value = "id") Long id);
 }

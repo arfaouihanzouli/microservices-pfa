@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.validation.Valid;
 
-@FeignClient(name = "zuul-server", decode404 = true)
+@FeignClient(contextId = "clientUser",name = "zuul-server", decode404 = true)
 @RibbonClient(name = "microservice-users")
 public interface UsersProxy {
 

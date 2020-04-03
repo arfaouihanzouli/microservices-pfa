@@ -96,10 +96,18 @@ public class CvController {
         return cv.get();
     }
     @DeleteMapping("/delete/{idCandidat}/{id}")
-    public ResponseEntity<?> deleteCv(@PathVariable(value = "idCandidat") Long idCandidat,
+    public ResponseEntity<?> deleteCvByCandidat(@PathVariable(value = "idCandidat") Long idCandidat,
                                       @PathVariable(value = "id") Long id)
     {
         CandidatBean candidatBean=this.candidatProxy.findCandidatById(idCandidat);
+        return this.cvService.findById(id).map(cv -> {
+            this.cvService.delete(cv);
+            return ResponseEntity.ok().build();
+        }).orElseThrow(() -> new BadRequestException("Ce CV : "+id+" n'existe pas!!"));
+    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteCv(@PathVariable(value = "id") Long id)
+    {
         return this.cvService.findById(id).map(cv -> {
             this.cvService.delete(cv);
             return ResponseEntity.ok().build();
